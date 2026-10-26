@@ -1,7 +1,8 @@
-import { decoys, getTarget, getWorld, worlds } from '../worlds'
-import type { World, WorldId } from '../worlds'
+import { getTarget, getWorld, worlds } from '../worlds'
+import type { Difficulty, World, WorldId } from '../worlds'
 import { INTRO_BEATS } from '../story/intro'
 import { findMatch } from './match'
+import { KNOWN_STORIES } from './stories'
 import {
   MAX_SCORE,
   SCORING,
@@ -12,7 +13,13 @@ import {
 
 export type Phase = 'intro' | 'identifyWorld' | 'findLocation' | 'trivia' | 'binding' | 'ending'
 
-export const QUESTIONS_ASKED = 3
+/** Each game asks one easy question, then two moderate, then two hard. */
+export const QUESTION_MIX: { difficulty: Difficulty; count: number }[] = [
+  { difficulty: 'easy', count: 1 },
+  { difficulty: 'moderate', count: 2 },
+  { difficulty: 'hard', count: 2 },
+]
+export const QUESTIONS_ASKED = QUESTION_MIX.reduce((sum, tier) => sum + tier.count, 0)
 /** Wrong guesses before the multiple-choice fallback appears. */
 export const FALLBACK_AFTER = 3
 
@@ -70,12 +77,9 @@ export type Action =
   | { type: 'FINISH_BINDING' }
   | { type: 'REPLAY'; worldId: WorldId; order: number[] }
 
-export const KNOWN_STORIES = [...worlds, ...decoys]
-
 /** Whether typed text names the given world. Decoys and other worlds never count. */
 export function isWorldGuess(text: string, worldId: WorldId): boolean {
-  const hit = findMatch(text, KNOWN_STORIES)
-  return Boolean(hit && 'id' in hit && hit.id === worldId)
+  return findMatch(text, KNOWN_STORIES)?.worldId === worldId
 }
 
 export function shuffle<T>(items: T[], rng: () => number): T[] {
@@ -87,9 +91,12 @@ export function shuffle<T>(items: T[], rng: () => number): T[] {
   return copy
 }
 
+/** Chooses questions at random within each difficulty and orders them easiest first. */
 export function pickQuestionOrder(world: World, rng: () => number): number[] {
-  const indexes = world.trivia.map((_, i) => i)
-  return shuffle(indexes, rng).slice(0, QUESTIONS_ASKED)
+  return QUESTION_MIX.flatMap(({ difficulty, count }) => {
+    const pool = world.trivia.flatMap((question, index) => (question.difficulty === difficulty ? [index] : []))
+    return shuffle(pool, rng).slice(0, count)
+  })
 }
 
 /** Picks a world, avoiding the one just played when there is a choice. */

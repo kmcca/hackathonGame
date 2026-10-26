@@ -8,8 +8,11 @@ export interface Pin {
   y: number
 }
 
+export type Difficulty = 'easy' | 'moderate' | 'hard'
+
 export interface TriviaQuestion {
   id: string
+  difficulty: Difficulty
   prompt: string
   options: string[]
   /** Index into options. */
@@ -20,6 +23,9 @@ export interface TriviaQuestion {
 
 export interface World {
   id: WorldId
+  /** The book or franchise the world comes from, for example "The Lord of the Rings". */
+  story: string
+  /** The world itself, for example "Middle-earth". */
   name: string
   /** Extra names the player may type. Matched after normalising, with a small typo tolerance. */
   aliases: string[]
@@ -39,6 +45,9 @@ export interface World {
   worldClues: [string, string, string]
   /** Three clues about where the target sits on the map, vaguest first. */
   locationClues: [string, string, string]
-  /** More questions than are asked, so replays vary. The game asks three. */
+  /**
+   * More questions than are asked, so replays vary. Each game asks one easy,
+   * two moderate and two hard questions, in that order.
+   */
   trivia: TriviaQuestion[]
 }

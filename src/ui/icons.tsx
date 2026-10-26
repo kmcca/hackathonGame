@@ -35,15 +35,17 @@ export function Pips({ count, max = 4 }: { count: number; max?: number }) {
   )
 }
 
-export type FragmentId = 'bow' | 'shaft' | 'bit'
+export type FragmentId = 'bow' | 'collar' | 'shaft' | 'ward' | 'bit'
 
 export const FRAGMENTS: { id: FragmentId; label: string }[] = [
   { id: 'bow', label: 'Bow' },
+  { id: 'collar', label: 'Collar' },
   { id: 'shaft', label: 'Shaft' },
+  { id: 'ward', label: 'Ward' },
   { id: 'bit', label: 'Bit' },
 ]
 
-/** One third of the key. */
+/** One piece of the key. */
 export function FragmentGlyph({ id }: { id: FragmentId }) {
   return (
     <svg className="fragment-glyph" viewBox="0 0 100 100" aria-hidden="true">
@@ -54,6 +56,14 @@ export function FragmentGlyph({ id }: { id: FragmentId }) {
           <rect x="86" y="43" width="14" height="14" stroke="none" />
         </>
       )}
+      {id === 'collar' && (
+        <>
+          <rect x="22" y="18" width="16" height="64" rx="3" stroke="none" />
+          <rect x="62" y="18" width="16" height="64" rx="3" stroke="none" />
+          <rect x="38" y="42" width="24" height="16" stroke="none" />
+        </>
+      )}
+      {id === 'ward' && <path d="M14 22h72v56H14zM40 40h20v20H40z" fillRule="evenodd" stroke="none" />}
       {id === 'shaft' && (
         <>
           <rect x="0" y="40" width="100" height="20" rx="3" stroke="none" />

@@ -23,8 +23,8 @@ export const mark = {
 
   identifyLabelled: 'Here, I will lend you the labelled map. Read it and think.',
 
-  identifySolved(worldName: string): string {
-    return `Yes! ${worldName}. Now we know which book holds you.`
+  identifySolved(story: string): string {
+    return `Yes! ${story}. Now we know which book holds you.`
   },
 
   findStart(target: string): string {
@@ -59,7 +59,7 @@ export const mark = {
   triviaLast: 'The last fragment! The key is whole.',
 
   bindingStart(name: string): string {
-    return `Three pieces, ${name}. Fit each into its place, then speak the spell and hold your nerve until the words are done.`
+    return `Five pieces, ${name}. Fit each into its place, then speak the spell and hold your nerve until the words are done.`
   },
 
   ending(name: string): string {

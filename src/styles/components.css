@@ -815,14 +815,25 @@ section[aria-labelledby='tried-title'] {
   gap: 0;
 }
 
-.key li:nth-child(1) {
-  flex: 1;
+.key {
+  flex-wrap: wrap;
 }
-.key li:nth-child(2) {
-  flex: 1.7;
+
+/* Proportions follow a real key: a wide bow, a long shaft and a short bit. */
+.key__cell {
+  flex: 1 1 4.75rem;
 }
-.key li:nth-child(3) {
-  flex: 1;
+.key__cell--bow {
+  flex-grow: 1.4;
+}
+.key__cell--shaft {
+  flex-grow: 1.8;
+}
+.key__cell--collar {
+  flex-grow: 0.8;
+}
+.key__cell--ward {
+  flex-grow: 1;
 }
 
 .key__slot {
@@ -1058,4 +1069,8 @@ section[aria-labelledby='tried-title'] {
 
 .page .button--secondary {
   color: var(--ink);
+}
+
+.fragment span {
+  text-transform: capitalize;
 }

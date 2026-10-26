@@ -25,7 +25,7 @@ The first draft was a near-black ground with one acid-green accent and a cream p
 - The ground is bottle green, not black, with a gilt edge, so it reads as a cloth-bound book.
 - Brew Green is reserved for magic. Everything else uses gilt, so the green stays meaningful.
 - Wrong answers use Madder plus a cross icon and the word "Not quite", never colour alone.
-- No eyebrow labels, no numbered markers except where the content is a real sequence (the three key fragments).
+- No eyebrow labels, no numbered markers except where the content is a real sequence (the five key fragments).
 
 ## Layout
 

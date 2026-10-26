@@ -34,7 +34,7 @@ npm run preview    # serve dist/ locally
 
 1. Add a module in `src/worlds/` that satisfies the `World` type, and register it in `src/worlds/index.ts`.
 2. Open `/pin-tool` (or `#pin-tool`), pick the world, click the map to place each pin, and paste the printed JSON into the module's `pins`. Fantasy places have no real coordinates, so this is how they are placed.
-3. Provide three world clues, three location clues, and at least three trivia questions. The game asks three at random.
+3. Provide three world clues, three location clues, and a pool of trivia questions tagged `easy`, `moderate` or `hard` (at least 2 easy, 2 moderate and 2 hard; eight is a good size). Each game asks one easy, two moderate and two hard, chosen at random. Set the `story` field to the book or franchise title, since players answer with "Story (World)".
 
 To replace a map, swap the image in `map_images/` (keep the same file name, or update the import) and re-check the pins in the pin tool.
 
@@ -46,7 +46,7 @@ Each of three stages is worth 100 points. Costs are shown before you pay them, a
 |---|---|
 | Which story | Wrong guess 10. Clues 10, 20 and 30. Labelled map 25. The multiple-choice shelf caps the stage at 40. |
 | Where | Wrong place 5. Clue 15. After 6 wrong places the target pulses. |
-| The key | Wrong answer 10. Retry as often as you like. |
+| The key | Five questions, easy to hard. Wrong answer 10. Retry as often as you like. |
 
 The Binding is a ritual and is not scored.
 

@@ -12,7 +12,7 @@ A free, static, browser-based game for Hackathon 28, themed around "Page Break."
 ## Architecture
 - Vite + React + TypeScript, built as a static site (`dist/`). No backend and no accounts. State lives in a small reducer-driven state machine: `intro -> identifyWorld -> findLocation -> trivia -> binding -> ending`.
 - Everything content-related lives in data files, so the fairytale theme can be applied later without touching logic:
-  - `src/worlds/<world>.ts` holds id, aliases (for answer matching), unlabeled and labeled map assets, pins (id, name, x/y in 0-1 map space), the target location, 3 world clues, 3 location clues, and 3-4 multiple-choice trivia questions (with a hint line each).
+  - `src/worlds/<world>.ts` holds id, aliases (for answer matching), unlabeled and labeled map assets, pins (id, name, x/y in 0-1 map space), the target location, 3 world clues, 3 location clues, and a pool of 8 multiple-choice trivia questions tagged easy, moderate or hard (with a hint line each). The story title is stored alongside the world name, so answers read as "The Lord of the Rings (Middle-earth)".
   - `src/story/*.ts` holds narration and dialogue beats, each with a speaker, portrait key and text.
 - Pure-function modules with unit tests (Vitest):
   - `scoring.ts`: 100 points per stage, with fixed, visible costs. Clues cost more than guesses. Points never drop below a floor, so the player can always finish.
@@ -36,10 +36,10 @@ Mark's guidance is deliberately partial (escalating clues, never the answer), be
 
 ## Game flow and safety nets
 1. **Intro:** the player enters their name (a required text field with a sensible default, kept in memory only). A strange, glowing green beer spills onto the bound Hackathon History Handbook, and creatures burst from the books. The player is pulled into one of them. Mark appears at the page's edge, addresses them by name, admits with a wry air that this wasn't supposed to happen, explains that they have taken a creature's place, and says that the key out can be found by using their creativity and knowledge of the world they're in. Dialogue is tap-to-complete and has a skip button.
-2. **Identify the world:** the player has landed somewhere unfamiliar, shown by the supplied unlabeled map for Westeros, Middle-earth, or Oz. Input is a text field with autocomplete. Mark gives 3 clues in escalating order (each costs more), and the last clue is a near-giveaway. Use the matching labeled map as the final hint, framed as Mark showing them where they are. After 3 wrong guesses, offer a multiple-choice fallback (it scores lower but unblocks the player).
+2. **Identify the world:** the player has landed somewhere unfamiliar, shown by the supplied unlabeled map for Westeros, Middle-earth, or Oz. Input is a text field with autocomplete. Answers are story names with the world in parentheses, for example "The Lord of the Rings (Middle-earth)"; the story alone, the world alone and common shorthand are also accepted. Mark gives 3 clues in escalating order (each costs more), and the last clue is a near-giveaway. Use the matching labeled map as the final hint, framed as Mark showing them where they are. After 3 wrong guesses, offer a multiple-choice fallback (it scores lower but unblocks the player).
 3. **Find the location:** Mark names the place where the way out lies (for example, Winterfell). The player taps pins to travel the world looking for it. Each tap shows name, leagues, a compass arrow and a proximity label, plus the pin's color. Each guess costs a little and a clue costs more. After N guesses, a pin pulses as a last-resort hint.
-4. **Trivia:** 3 multiple-choice questions about that place, framed as "pieces of the key". A wrong answer lowers the score and shows a hint. The player can retry, so they never hard-fail. Earlier clues should make most answers inferable by non-fans.
-5. **The Binding (finale):** each correct answer adds a key fragment. The finale is a non-trivia ritual: assemble the key (tap the fragments into place), then hold-to-recite the spell (a hold-to-confirm, not a tap). The book slams shut, the player is back in the Veracafe, and the final page of the book now has their name in the story. The result card is that page, with rank title, per-stage score and share button.
+4. **Trivia:** 5 multiple-choice questions about the story and its world, framed as "pieces of the key". Each game asks one easy question, then two moderate and two hard, drawn at random from the world's pool so replays differ. A wrong answer lowers the score and shows a hint. The player can retry, so they never hard-fail. Hints should help a non-fan narrow the options without giving the answer away.
+5. **The Binding (finale):** each correct answer adds a key fragment. The finale is a non-trivia ritual: assemble the five-piece key (tap each fragment into place), then hold-to-recite the spell (a hold-to-confirm, not a tap). The book slams shut, the player is back in the Veracafe, and the final page of the book now has their name in the story. The result card is that page, with rank title, per-stage score and share button.
 
 ## Design direction
 Apply the frontend-design process (tokens, review against the brief, build, critique) with the game-ui-design constraints.
@@ -59,7 +59,7 @@ Apply the frontend-design process (tokens, review against the brief, build, crit
   - Layout scales with `rem` and viewport units, with a text-size toggle. There are no hardcoded pixel layouts and no z-index above 500.
 
 ## Red flags to carry through the build
-Copyright on franchise material (accepted by user), content authoring cost (roughly 12-15 pins per map, 6 clue sets, and ~10 trivia questions per world), dead-ends for non-fans, answer-matching false negatives, narration length, no anti-cheat (answers live client-side), mobile map gestures vs tap, and accessibility.
+Copyright on franchise material (accepted by user), content authoring cost (roughly 12-15 pins per map, 6 clue sets, and ~8 trivia questions per world), dead-ends for non-fans, answer-matching false negatives, narration length, no anti-cheat (answers live client-side), mobile map gestures vs tap, and accessibility.
 
 ## Critical files to create
 - `package.json`, `vite.config.ts`, `index.html`

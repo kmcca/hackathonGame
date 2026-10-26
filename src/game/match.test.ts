@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { decoys, worlds } from '../worlds'
+import { worlds } from '../worlds'
 import { findMatch, levenshtein, matches, normalize, suggest } from './match'
+import { KNOWN_STORIES, knownStory, storyLabel } from './stories'
 
 describe('normalize', () => {
   it('ignores case, punctuation, accents and a leading "the"', () => {
     expect(normalize('  The   Lórd of the Rings! ')).toBe('lord of the rings')
     expect(normalize('Middle-earth')).toBe('middle earth')
+  })
+
+  it('treats parentheses as spaces', () => {
+    expect(normalize('The Lord of the Rings (Middle-earth)')).toBe('lord of the rings middle earth')
   })
 })
 
@@ -16,15 +21,27 @@ describe('levenshtein', () => {
   })
 })
 
-describe('matches', () => {
-  const westeros = worlds.find((w) => w.id === 'westeros')!
-  const oz = worlds.find((w) => w.id === 'oz')!
+describe('story labels', () => {
+  it('shows the story with its world in parentheses', () => {
+    const labels = worlds.map(storyLabel)
+    expect(labels).toContain('The Lord of the Rings (Middle-earth)')
+    expect(labels).toContain('A Song of Ice and Fire (Westeros)')
+    expect(labels).toContain('The Wizard of Oz (Oz)')
+  })
+})
 
-  it('accepts the name, aliases and sloppy casing', () => {
+describe('matches', () => {
+  const westeros = knownStory('westeros')
+  const oz = knownStory('oz')
+  const middleEarth = knownStory('middleEarth')
+
+  it('accepts the full label, the story alone, the world alone, and aliases', () => {
+    expect(matches('A Song of Ice and Fire (Westeros)', westeros)).toBe(true)
+    expect(matches('a song of ice and fire', westeros)).toBe(true)
     expect(matches('Westeros', westeros)).toBe(true)
-    expect(matches('game of thrones', westeros)).toBe(true)
     expect(matches('GAME OF THRONES', westeros)).toBe(true)
-    expect(matches('the seven kingdoms', westeros)).toBe(true)
+    expect(matches('The Lord of the Rings (Middle-earth)', middleEarth)).toBe(true)
+    expect(matches('Middle-earth', middleEarth)).toBe(true)
   })
 
   it('forgives a small typo in longer names', () => {
@@ -42,46 +59,48 @@ describe('matches', () => {
     expect(matches('   ', westeros)).toBe(false)
   })
 
-  it('never lets one world accept another world\'s name', () => {
-    for (const a of worlds) {
-      for (const b of worlds) {
-        if (a.id !== b.id) {
-          expect(findMatch(b.name, [a])).toBeNull()
-          for (const alias of b.aliases) expect(findMatch(alias, [a])).toBeNull()
-        }
+  it('never lets one world accept another world\'s name or alias', () => {
+    for (const a of KNOWN_STORIES.filter((s) => s.worldId)) {
+      for (const b of KNOWN_STORIES.filter((s) => s.worldId && s.worldId !== a.worldId)) {
+        for (const name of [b.name, ...b.aliases]) expect(matches(name, a)).toBe(false)
       }
     }
   })
 
-  it('never lets a decoy name win a real world', () => {
-    for (const decoy of decoys) {
-      expect(findMatch(decoy.name, worlds)).toBeNull()
+  it('resolves every label and alias of a playable world to that world, and decoys to none', () => {
+    for (const story of KNOWN_STORIES) {
+      for (const name of [story.name, ...story.aliases]) {
+        expect(findMatch(name, KNOWN_STORIES)?.worldId).toBe(story.worldId)
+      }
     }
   })
 })
 
 describe('suggest', () => {
-  const all = [...worlds, ...decoys]
-
   it('returns nothing for empty input', () => {
-    expect(suggest('', all)).toEqual([])
+    expect(suggest('', KNOWN_STORIES)).toEqual([])
+  })
+
+  it('suggests full "Story (World)" labels', () => {
+    expect(suggest('lord', KNOWN_STORIES)).toContain('The Lord of the Rings (Middle-earth)')
   })
 
   it('includes decoys so suggestions never give the answer away', () => {
-    expect(suggest('n', all)).toContain('Narnia')
-    expect(suggest('n', all).length).toBeGreaterThan(1)
+    const result = suggest('n', KNOWN_STORIES)
+    expect(result).toContain('The Chronicles of Narnia (Narnia)')
+    expect(result.length).toBeGreaterThan(1)
   })
 
   it('puts prefix matches ahead of looser matches', () => {
-    const result = suggest('w', all)
-    expect(result[0]).toBe('Westeros')
+    expect(suggest('w', KNOWN_STORIES)[0]).toMatch(/Westeros|Wizard|Wonderland|Winnie/)
   })
 
-  it('finds a world through its alias', () => {
-    expect(suggest('lord of', all)).toContain('Middle-earth')
+  it('finds a story through the world name or an alias', () => {
+    expect(suggest('middle', KNOWN_STORIES)).toContain('The Lord of the Rings (Middle-earth)')
+    expect(suggest('thrones', KNOWN_STORIES)).toContain('A Song of Ice and Fire (Westeros)')
   })
 
   it('respects the limit', () => {
-    expect(suggest('e', all, 3).length).toBeLessThanOrEqual(3)
+    expect(suggest('e', KNOWN_STORIES, 3).length).toBeLessThanOrEqual(3)
   })
 })

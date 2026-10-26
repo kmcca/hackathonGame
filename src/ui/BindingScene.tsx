@@ -11,7 +11,7 @@ const TAPS_NEEDED = 5
 const SLAM_MS = 1500
 const SLAM_REDUCED_MS = 500
 /** Fragments are offered in a different order from the key, so placing them is a small puzzle. */
-const OFFER_ORDER: FragmentId[] = ['shaft', 'bit', 'bow']
+const OFFER_ORDER: FragmentId[] = ['ward', 'bow', 'bit', 'collar', 'shaft']
 
 interface BindingSceneProps {
   playerName: string
@@ -75,7 +75,7 @@ export function BindingScene({ playerName, onFinish, onMessage }: BindingScenePr
           {FRAGMENTS.map((fragment) => {
             const isPlaced = placed.includes(fragment.id)
             return (
-              <li key={fragment.id}>
+              <li key={fragment.id} className={`key__cell key__cell--${fragment.id}`}>
                 <button
                   type="button"
                   className={isPlaced ? `key__slot key__slot--${fragment.id} key__slot--filled` : `key__slot key__slot--${fragment.id}`}

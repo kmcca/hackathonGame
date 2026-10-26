@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { FALLBACK_AFTER, KNOWN_STORIES, isWorldGuess } from '../../game/state'
+import { FALLBACK_AFTER, isWorldGuess } from '../../game/state'
+import { KNOWN_STORIES, storyLabel } from '../../game/stories'
 import type { Action, GameState } from '../../game/state'
 import { suggest } from '../../game/match'
 import { SCORING, scoreWorld, worldClueCost } from '../../game/scoring'
@@ -19,6 +20,7 @@ interface Props {
 
 export function IdentifyScreen({ state, dispatch }: Props) {
   const world = getWorld(state.worldId)
+  const label = storyLabel(world)
   const { identify } = state
   const [text, setText] = useState('')
   const [line, setLine] = useState(() => mark.identifyStart(state.playerName, state.replay))
@@ -37,14 +39,14 @@ export function IdentifyScreen({ state, dispatch }: Props) {
     dispatch({ type: 'GUESS_WORLD', text: value })
     setText('')
     const wrongSoFar = identify.wrongGuesses.length + 1
-    if (isWorldGuess(value, state.worldId)) setLine(mark.identifySolved(world.name))
+    if (isWorldGuess(value, state.worldId)) setLine(mark.identifySolved(label))
     else if (wrongSoFar === FALLBACK_AFTER) setLine(mark.identifyFallback(state.playerName))
     else setLine(mark.identifyWrong(wrongSoFar))
   }
 
   const pick = (id: WorldId) => {
     dispatch({ type: 'FALLBACK_GUESS', worldId: id })
-    setLine(id === world.id ? mark.identifySolved(world.name) : 'Not that one. Look at the map again.')
+    setLine(id === world.id ? mark.identifySolved(label) : 'Not that one. Look at the map again.')
   }
 
   return (
@@ -116,7 +118,7 @@ export function IdentifyScreen({ state, dispatch }: Props) {
                             aria-disabled={ruledOut}
                             onClick={() => pick(candidate.id)}
                           >
-                            {candidate.name}
+                            {storyLabel(candidate)}
                             {ruledOut && (
                               <span className="option__status">
                                 <CrossIcon /> Not this one
@@ -134,7 +136,7 @@ export function IdentifyScreen({ state, dispatch }: Props) {
 
           {identify.solved && (
             <section className="success" aria-live="polite">
-              <h2>{world.name}</h2>
+              <h2>{label}</h2>
               <p>
                 You named the story. This page scored <strong>{earned}</strong> of {SCORING.stageMax}.
               </p>

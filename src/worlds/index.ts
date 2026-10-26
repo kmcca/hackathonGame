@@ -17,5 +17,5 @@ export function getTarget(world: World) {
   return pin
 }
 
-export type { Pin, TriviaQuestion, World, WorldId } from './types'
+export type { Difficulty, Pin, TriviaQuestion, World, WorldId } from './types'
 export { decoys } from './decoys'
