@@ -35,7 +35,6 @@ export interface IdentifyState {
 
 export interface FindState {
   guessedPinIds: string[]
-  cluesUsed: number
   solved: boolean
 }
 
@@ -71,7 +70,6 @@ export type Action =
   | { type: 'SHOW_LABELLED' }
   | { type: 'FALLBACK_GUESS'; worldId: WorldId }
   | { type: 'TAP_PIN'; pinId: string }
-  | { type: 'LOCATION_CLUE' }
   | { type: 'ANSWER'; option: number }
   | { type: 'CONTINUE' }
   | { type: 'FINISH_BINDING' }
@@ -121,7 +119,7 @@ export function createGame(worldId: WorldId, order: number[], playerName = ''): 
       fallbackRuledOut: [],
       solved: false,
     },
-    find: { guessedPinIds: [], cluesUsed: 0, solved: false },
+    find: { guessedPinIds: [], solved: false },
     trivia: {
       order,
       current: 0,
@@ -217,12 +215,6 @@ export function reducer(state: GameState, action: Action): GameState {
       }
     }
 
-    case 'LOCATION_CLUE': {
-      const { find } = state
-      if (state.phase !== 'findLocation' || find.solved || find.cluesUsed >= world.locationClues.length) return state
-      return { ...state, find: { ...find, cluesUsed: find.cluesUsed + 1 } }
-    }
-
     case 'ANSWER': {
       const { trivia } = state
       if (state.phase !== 'trivia' || trivia.solved[trivia.current]) return state
@@ -286,7 +278,7 @@ export function computeScores(state: GameState): Scores {
     labelledShown: state.identify.labelledShown,
     usedFallback: state.identify.usedFallback,
   })
-  const location = scoreLocation({ wrongPins: wrongPins(state), cluesUsed: state.find.cluesUsed })
+  const location = scoreLocation({ wrongPins: wrongPins(state) })
   const trivia = scoreTrivia({ wrongAnswers: wrongAnswers(state) })
   return { world, location, trivia, total: world + location + trivia }
 }

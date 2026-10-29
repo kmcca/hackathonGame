@@ -17,8 +17,8 @@ export function TitleScreen({ name, onNameChange, onStart }: TitleScreenProps) {
         width="750"
         height="508"
       />
-      <ScreenHeading hint="Name the story you have landed in, find the place where the way out lies, and forge the key. It takes about five minutes.">
-        Escape the book
+      <ScreenHeading hint="Name the story you have landed in, find the place where the way out lies, and forge the key.">
+        Page Break: Breakout
       </ScreenHeading>
       <form
         className="name-form"

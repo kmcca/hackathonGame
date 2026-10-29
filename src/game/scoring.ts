@@ -14,7 +14,6 @@ export const SCORING = {
   },
   location: {
     wrongPin: 5,
-    clue: 15,
     /** Wrong pins before the target pulses. */
     pulseAfter: 6,
   },
@@ -35,7 +34,6 @@ export interface WorldStats {
 
 export interface LocationStats {
   wrongPins: number
-  cluesUsed: number
 }
 
 export interface TriviaStats {
@@ -61,7 +59,7 @@ export function scoreWorld(stats: WorldStats): number {
 }
 
 export function scoreLocation(stats: LocationStats): number {
-  return clamp(SCORING.stageMax - stats.wrongPins * SCORING.location.wrongPin - stats.cluesUsed * SCORING.location.clue)
+  return clamp(SCORING.stageMax - stats.wrongPins * SCORING.location.wrongPin)
 }
 
 export function scoreTrivia(stats: TriviaStats): number {

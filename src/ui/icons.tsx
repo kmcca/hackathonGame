@@ -25,16 +25,6 @@ export function CompassArrow({ degrees, size = '2rem' }: { degrees: number; size
   )
 }
 
-export function Pips({ count, max = 4 }: { count: number; max?: number }) {
-  return (
-    <span className="pips" aria-hidden="true">
-      {Array.from({ length: max }, (_, i) => (
-        <span key={i} className={i < count ? 'pips__pip pips__pip--on' : 'pips__pip'} />
-      ))}
-    </span>
-  )
-}
-
 export type FragmentId = 'bow' | 'collar' | 'shaft' | 'ward' | 'bit'
 
 export const FRAGMENTS: { id: FragmentId; label: string }[] = [

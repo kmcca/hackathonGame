@@ -18,8 +18,6 @@ export type ProximityBand = 'found' | 'veryClose' | 'close' | 'far' | 'veryFar'
 export interface Proximity {
   band: ProximityBand
   label: string
-  /** 0-4 filled pips, so closeness never depends on colour alone. */
-  pips: number
 }
 
 const COMPASS: { compass: Compass; label: string }[] = [
@@ -55,12 +53,20 @@ export function bearing(from: Point, to: Point, aspect: number): Bearing {
   return { compass: entry.compass, degrees: index * 45, label: entry.label }
 }
 
+/** The four wrong-place bands, nearest first. The on-screen key reads from this too. */
+export const PROXIMITY_SCALE: Proximity[] = [
+  { band: 'veryClose', label: 'Very close' },
+  { band: 'close', label: 'Close' },
+  { band: 'far', label: 'Far' },
+  { band: 'veryFar', label: 'Very far' },
+]
+
 /** Buckets a distance, as a share of the map width, into a named band. */
 export function proximity(leagues: number, leaguesAcross: number): Proximity {
-  if (leagues <= 0) return { band: 'found', label: 'You found it', pips: 5 }
+  if (leagues <= 0) return { band: 'found', label: 'You found it' }
   const share = leagues / leaguesAcross
-  if (share < 0.08) return { band: 'veryClose', label: 'Very close', pips: 4 }
-  if (share < 0.2) return { band: 'close', label: 'Close', pips: 3 }
-  if (share < 0.38) return { band: 'far', label: 'Far', pips: 2 }
-  return { band: 'veryFar', label: 'Very far', pips: 1 }
+  if (share < 0.08) return PROXIMITY_SCALE[0]
+  if (share < 0.2) return PROXIMITY_SCALE[1]
+  if (share < 0.38) return PROXIMITY_SCALE[2]
+  return PROXIMITY_SCALE[3]
 }

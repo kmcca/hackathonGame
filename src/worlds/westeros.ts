@@ -35,7 +35,7 @@ export const westeros: World = {
   ],
   targetId: 'winterfell',
   worldClues: [
-    'I hear whispers of a throne made of swords, and nobody sits on it comfortably.',
+    'The seasons here last for years, and no almanac has ever predicted the next one correctly.',
     'Seven kingdoms, one iron seat, and a wall of ice that keeps old horrors at bay. Mind the direwolves.',
     'There is a Mother of Dragons, a Hand of the King, and a very long winter that is always coming.',
   ],

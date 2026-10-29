@@ -43,14 +43,13 @@ describe('scoreWorld', () => {
 })
 
 describe('scoreLocation', () => {
-  it('charges small amounts for pins and more for clues', () => {
-    expect(SCORING.location.clue).toBeGreaterThan(SCORING.location.wrongPin)
-    expect(scoreLocation({ wrongPins: 0, cluesUsed: 0 })).toBe(100)
-    expect(scoreLocation({ wrongPins: 4, cluesUsed: 1 })).toBe(65)
+  it('charges a small amount for each wrong place', () => {
+    expect(scoreLocation({ wrongPins: 0 })).toBe(100)
+    expect(scoreLocation({ wrongPins: 4 })).toBe(80)
   })
 
   it('never drops below the floor', () => {
-    expect(scoreLocation({ wrongPins: 100, cluesUsed: 3 })).toBe(SCORING.floor)
+    expect(scoreLocation({ wrongPins: 100 })).toBe(SCORING.floor)
   })
 })
 

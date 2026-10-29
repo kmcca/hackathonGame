@@ -1,4 +1,4 @@
-# Page Break: Escape the Book
+# Page Break: Breakout
 
 A free, browser-based map-and-trivia game for Hackathon 28 ("Page Break"). A glowing green beer spills, the books burst open, and you are swallowed by one. Wizard Mark guides you from the edge of the page: name the story you landed in, find the place where the way out lies, answer questions to forge the key, then speak the spell. A play-through takes four to six minutes.
 
@@ -24,6 +24,7 @@ npm run preview    # serve dist/ locally
 |---|---|
 | `src/worlds/*.ts` | One module per world: map images, pins, clues and trivia. `decoys.ts` lists stories that only appear in autocomplete. |
 | `src/story/` | Intro beats and Mark's lines. Edit these to change the voice. |
+| `src/audio/` | Voice playback. `voice.ts` maps each line id (see `docs/AUDIO_SCRIPT.md`) to a start and end time in a recording in `voice_audio/`. |
 | `src/game/` | Pure logic with tests: `scoring`, `geo`, `match`, `state` (the reducer), `share`. |
 | `src/ui/` | Components and the six screens. |
 | `src/styles/` | Tokens, base, layout, components, and the two memorable moments. |
@@ -45,7 +46,7 @@ Each of three stages is worth 100 points. Costs are shown before you pay them, a
 | Stage | Costs |
 |---|---|
 | Which story | Wrong guess 10. Clues 10, 20 and 30. Labelled map 25. The multiple-choice shelf caps the stage at 40. |
-| Where | Wrong place 5. Clue 15. After 6 wrong places the target pulses. |
+| Where | Wrong place 5. No clues; the player gets a direction and a Close/Far label for each place. After 6 wrong places the target pulses. |
 | The key | Five questions, easy to hard. Wrong answer 10. Retry as often as you like. |
 
 The Binding is a ritual and is not scored.
@@ -53,6 +54,6 @@ The Binding is a ritual and is not scored.
 ## Accessibility
 
 - Every control is at least 44px, and pins are real buttons. Arrow keys move between pins on the map.
-- Proximity is shown with a word, a shape and filled pips, and direction with an arrow and its spoken form. Colour is never the only signal.
+- Proximity is shown with a word and a shape, and direction with an arrow and its spoken form. Colour is never the only signal.
 - The settings menu has a text-size control and a reduce-motion switch. The operating system's reduced-motion setting is respected on first load.
 - The spell can be spoken by holding the seal (pointer or Space) or, for anyone who cannot hold, by tapping it five times.

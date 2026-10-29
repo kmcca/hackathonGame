@@ -1,3 +1,4 @@
+import { useVoice } from '../../audio/useVoice'
 import { useState } from 'react'
 import { FALLBACK_AFTER, isWorldGuess } from '../../game/state'
 import { KNOWN_STORIES, storyLabel } from '../../game/stories'
@@ -24,6 +25,9 @@ export function IdentifyScreen({ state, dispatch }: Props) {
   const { identify } = state
   const [text, setText] = useState('')
   const [line, setLine] = useState(() => mark.identifyStart(state.playerName, state.replay))
+
+  // Only the opening line is recorded; replies to guesses are story-specific and stay silent.
+  useVoice(!state.replay && line === mark.identifyStart(state.playerName, false) ? 'STORY-01' : null, line)
 
   const allClues = identify.cluesUsed >= world.worldClues.length
   const fallbackOpen = identify.wrongGuesses.length >= FALLBACK_AFTER && !identify.solved

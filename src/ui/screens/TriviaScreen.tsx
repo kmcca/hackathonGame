@@ -1,3 +1,4 @@
+import { useVoice } from '../../audio/useVoice'
 import { SCORING, scoreTrivia } from '../../game/scoring'
 import { wrongAnswers } from '../../game/state'
 import type { Action, GameState } from '../../game/state'
@@ -24,10 +25,14 @@ export function TriviaScreen({ state, dispatch }: Props) {
   const line = solved
     ? isLast
       ? mark.triviaLast
-      : mark.triviaRight
+      : mark.triviaRight(index)
     : ruledOut.length > 0
       ? mark.triviaWrong(question.hint)
       : mark.triviaStart
+
+  // Wrong answers get a story-specific hint, which is not recorded, so they stay silent.
+  const voiceId = solved ? (isLast ? 'TRIVIA-03' : null) : ruledOut.length > 0 ? null : index === 0 ? 'TRIVIA-01' : null
+  useVoice(voiceId, `${index}-${solved}-${ruledOut.length}`)
 
   return (
     <main className="screen">

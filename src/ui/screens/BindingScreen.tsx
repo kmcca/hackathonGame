@@ -1,3 +1,4 @@
+import { useVoice } from '../../audio/useVoice'
 import { useCallback, useState } from 'react'
 import { mark } from '../../story/mark'
 import { BindingScene } from '../BindingScene'
@@ -10,6 +11,7 @@ interface Props {
 
 export function BindingScreen({ playerName, onFinish }: Props) {
   const [line, setLine] = useState(() => mark.bindingStart(playerName))
+  useVoice('BIND-01', 'start')
   const onMessage = useCallback((message: string) => setLine(message), [])
 
   return (

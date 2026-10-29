@@ -17,6 +17,7 @@ import { BindingScreen } from './ui/screens/BindingScreen'
 import { EndingScreen } from './ui/screens/EndingScreen'
 import { FindScreen } from './ui/screens/FindScreen'
 import { IdentifyScreen } from './ui/screens/IdentifyScreen'
+import { IntroBackdrop } from './ui/IntroBackdrop'
 import { IntroScreen } from './ui/screens/IntroScreen'
 import { TitleScreen } from './ui/screens/TitleScreen'
 import { TriviaScreen } from './ui/screens/TriviaScreen'
@@ -62,6 +63,7 @@ function Game() {
 
   return (
     <div className="app">
+      {state.phase === 'intro' && <IntroBackdrop />}
       <Hud
         bare={state.phase === 'intro'}
         fragments={fragmentsEarned(state)}

@@ -1,8 +1,10 @@
+import { useSpeak } from '../audio/useVoice'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent, PointerEvent } from 'react'
 import { SPELL_LINES } from '../story/mark'
 import { fillName } from '../story/intro'
-import { CheckIcon, FRAGMENTS, FragmentGlyph } from './icons'
+import { CheckIcon, FRAGMENTS } from './icons'
+import { KEY_HEIGHT, KEY_PIECES, KEY_TOGETHER } from './keyArt'
 import type { FragmentId } from './icons'
 import { usePrefs } from './prefs'
 
@@ -24,6 +26,7 @@ type Step = 'assemble' | 'recite' | 'slam'
 
 export function BindingScene({ playerName, onFinish, onMessage }: BindingSceneProps) {
   const { reduceMotion } = usePrefs()
+  const speak = useSpeak()
   const [step, setStep] = useState<Step>('assemble')
   const [placed, setPlaced] = useState<FragmentId[]>([])
   const [selected, setSelected] = useState<FragmentId | null>(null)
@@ -46,6 +49,7 @@ export function BindingScene({ playerName, onFinish, onMessage }: BindingScenePr
     if (next.length === FRAGMENTS.length) {
       setNote('The key is whole.')
       onMessage('The key is whole, and it is warm to the touch. Now speak the spell.')
+      speak(['BIND-02', 'BIND-04'])
       setStep('recite')
     } else {
       setNote(`The ${label(slot)} clicks into place.`)
@@ -55,7 +59,8 @@ export function BindingScene({ playerName, onFinish, onMessage }: BindingScenePr
   const finishRecital = useCallback(() => {
     setStep('slam')
     onMessage('The book is closing. Hold on to your hat.')
-  }, [onMessage])
+    speak(['BIND-07', 'BIND-03'])
+  }, [onMessage, speak])
 
   const finish = useRef(onFinish)
   useEffect(() => {
@@ -71,11 +76,11 @@ export function BindingScene({ playerName, onFinish, onMessage }: BindingScenePr
   return (
     <div className="binding">
       <section className="binding__key" aria-label="The key">
-        <ul className="key">
+        <ul className="key" style={{ aspectRatio: `${KEY_TOGETHER.width} / ${KEY_HEIGHT}` }}>
           {FRAGMENTS.map((fragment) => {
             const isPlaced = placed.includes(fragment.id)
             return (
-              <li key={fragment.id} className={`key__cell key__cell--${fragment.id}`}>
+              <li key={fragment.id} className="key__cell" style={{ flexGrow: KEY_PIECES[fragment.id].width }}>
                 <button
                   type="button"
                   className={isPlaced ? `key__slot key__slot--${fragment.id} key__slot--filled` : `key__slot key__slot--${fragment.id}`}
@@ -83,13 +88,18 @@ export function BindingScene({ playerName, onFinish, onMessage }: BindingScenePr
                   aria-disabled={isPlaced || step !== 'assemble'}
                   aria-label={isPlaced ? `${fragment.label} slot, filled` : `${fragment.label} slot, empty`}
                 >
-                  <FragmentGlyph id={fragment.id} />
-                  <span className="key__slot-label">{fragment.label}</span>
+                  <img className="key__piece" src={KEY_PIECES[fragment.id].src} alt="" draggable={false} />
                 </button>
               </li>
             )
           })}
+          {step !== 'assemble' && (
+            <li className="key__whole" aria-hidden="true">
+              <img src={KEY_TOGETHER.src} alt="" draggable={false} />
+            </li>
+          )}
         </ul>
+        {step !== 'assemble' && <p className="visually-hidden">{KEY_TOGETHER.alt}</p>}
       </section>
 
       {step === 'assemble' && (
@@ -110,7 +120,7 @@ export function BindingScene({ playerName, onFinish, onMessage }: BindingScenePr
                       setNote(`The ${label(id)} is in your hand. Where does it belong?`)
                     }}
                   >
-                    <FragmentGlyph id={id} />
+                    <img className="fragment__piece" src={KEY_PIECES[id].src} alt="" draggable={false} />
                     <span>{label(id)}</span>
                     {isPlaced && <CheckIcon />}
                   </button>
@@ -143,6 +153,7 @@ interface RecitalProps {
 
 /** Hold-to-confirm: the spell is only spoken once the button has been held for the whole ritual. */
 function Recital({ name, onDone, done }: RecitalProps) {
+  const speak = useSpeak()
   const [progress, setProgress] = useState(0)
   const [tapMode, setTapMode] = useState(false)
   const [message, setMessage] = useState('Press and hold the seal until the spell is spoken.')
@@ -155,12 +166,14 @@ function Recital({ name, onDone, done }: RecitalProps) {
     cancelAnimationFrame(frame.current)
     setProgress(0)
     setMessage('Too soon. Hold the seal for the whole spell.')
-  }, [])
+    speak('BIND-05')
+  }, [speak])
 
   const begin = useCallback(() => {
     if (done || tapMode || start.current !== null) return
     start.current = performance.now()
     setMessage('Keep holding…')
+    speak('BIND-06')
     const tick = (now: number) => {
       if (start.current === null) return
       const next = Math.min(1, (now - start.current) / HOLD_MS)
@@ -173,7 +186,7 @@ function Recital({ name, onDone, done }: RecitalProps) {
       frame.current = requestAnimationFrame(tick)
     }
     frame.current = requestAnimationFrame(tick)
-  }, [done, tapMode, onDone])
+  }, [done, tapMode, onDone, speak])
 
   useEffect(() => () => cancelAnimationFrame(frame.current), [])
 

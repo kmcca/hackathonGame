@@ -27,9 +27,8 @@ export const mark = {
     return `Yes! ${story}. Now we know which book holds you.`
   },
 
-  findStart(target: string): string {
-    return `The way out lies at ${target}. Tap places on the map and I will tell you how far you are, and in which direction.`
-  },
+  findStart:
+    'The way out lies somewhere in this story. Tap places on the map and I will tell you whether you are warm or cold, and which way to go.',
 
   findResult(band: ProximityBand, target: string): string {
     switch (band) {
@@ -54,7 +53,16 @@ export const mark = {
     return `Not quite. ${hint}`
   },
 
-  triviaRight: 'A fine fragment. Hold it fast.',
+  /** Pieces one to four, in order. The fifth uses triviaLast. */
+  triviaRight(piece: number): string {
+    const lines = [
+      'The first piece forms. Keep it close.',
+      'Another piece, bright as brass.',
+      'Three down, and the key grows heavy in your hand.',
+      'Four pieces. One more and the lock will listen.',
+    ]
+    return lines[piece % lines.length]
+  },
 
   triviaLast: 'The last fragment! The key is whole.',
 

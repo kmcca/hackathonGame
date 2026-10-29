@@ -60,7 +60,6 @@ describe('proximity', () => {
   it('gets warmer as the distance shrinks and never relies on colour alone', () => {
     const bands = [700, 250, 120, 40].map((leagues) => proximity(leagues, 900))
     expect(bands.map((b) => b.band)).toEqual(['veryFar', 'far', 'close', 'veryClose'])
-    expect(bands.map((b) => b.pips)).toEqual([1, 2, 3, 4])
     bands.forEach((b) => expect(b.label.length).toBeGreaterThan(0))
   })
 })

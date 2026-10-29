@@ -9,6 +9,9 @@ interface Prefs {
   /** True when the player or their system asked for less motion. */
   reduceMotion: boolean
   setReduceMotion: (reduce: boolean) => void
+  /** True when recorded voices should play. */
+  voice: boolean
+  setVoice: (on: boolean) => void
 }
 
 const STORAGE_KEY = 'pagebreak.prefs'
@@ -16,6 +19,7 @@ const STORAGE_KEY = 'pagebreak.prefs'
 interface Stored {
   textSize?: TextSize
   reduceMotion?: boolean
+  voice?: boolean
 }
 
 function readStored(): Stored {
@@ -38,20 +42,22 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
     () => readStored().reduceMotion ?? systemPrefersReducedMotion(),
   )
 
+  const [voice, setVoice] = useState<boolean>(() => readStored().voice ?? true)
+
   useEffect(() => {
     const root = document.documentElement
     root.dataset.textSize = textSize
     root.dataset.motion = reduceMotion ? 'reduce' : 'full'
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ textSize, reduceMotion }))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ textSize, reduceMotion, voice }))
     } catch {
       // Preferences just won't persist.
     }
-  }, [textSize, reduceMotion])
+  }, [textSize, reduceMotion, voice])
 
   const value = useMemo(
-    () => ({ textSize, setTextSize, reduceMotion, setReduceMotion }),
-    [textSize, reduceMotion],
+    () => ({ textSize, setTextSize, reduceMotion, setReduceMotion, voice, setVoice }),
+    [textSize, reduceMotion, voice],
   )
   return <PrefsContext.Provider value={value}>{children}</PrefsContext.Provider>
 }

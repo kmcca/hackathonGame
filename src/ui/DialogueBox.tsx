@@ -11,13 +11,15 @@ interface DialogueBoxProps {
   /** Called when the text is already complete and the player asks to move on. */
   onNext: () => void
   nextLabel: string
+  /** Seconds of recorded speech for this line. The text types out to match it, never faster than normal. */
+  voiceSeconds?: number | null
 }
 
 /**
  * Tap-to-complete dialogue. The first press finishes the line, the next moves on.
  * Screen readers get the whole line at once; the typing effect is visual only.
  */
-export function DialogueBox({ speaker, text, onNext, nextLabel }: DialogueBoxProps) {
+export function DialogueBox({ speaker, text, onNext, nextLabel, voiceSeconds }: DialogueBoxProps) {
   const { reduceMotion } = usePrefs()
   const [shown, setShown] = useState(reduceMotion ? text.length : 0)
 
@@ -27,6 +29,7 @@ export function DialogueBox({ speaker, text, onNext, nextLabel }: DialogueBoxPro
       return
     }
     setShown(0)
+    const msPerCharacter = voiceSeconds ? Math.max(MS_PER_CHARACTER, (voiceSeconds * 900) / text.length) : MS_PER_CHARACTER
     const timer = window.setInterval(() => {
       setShown((count) => {
         if (count >= text.length) {
@@ -35,9 +38,9 @@ export function DialogueBox({ speaker, text, onNext, nextLabel }: DialogueBoxPro
         }
         return count + 1
       })
-    }, MS_PER_CHARACTER)
+    }, msPerCharacter)
     return () => window.clearInterval(timer)
-  }, [text, reduceMotion])
+  }, [text, reduceMotion, voiceSeconds])
 
   const complete = shown >= text.length
   const press = () => (complete ? onNext() : setShown(text.length))

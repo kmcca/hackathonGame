@@ -32,7 +32,7 @@ export const oz: World = {
   ],
   targetId: 'emerald-city',
   worldClues: [
-    'A girl, her little dog, and a house that fell from the sky in a great storm.',
+    'Visitors here almost always arrive by accident, and spend the whole story trying to get home.',
     'A scarecrow, a tin woodman and a cowardly lion all walk a road paved in gold.',
     'Follow the yellow brick road to see the Wizard. There is no place like home.',
   ],

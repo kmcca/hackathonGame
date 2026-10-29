@@ -36,7 +36,7 @@ export const middleEarth: World = {
   ],
   targetId: 'mount-doom',
   worldClues: [
-    'A ring of power, a company of nine, and a very small hero with large, hairy feet.',
+    'A small trinket of gold was lost here long ago, and it has caused no end of trouble for everyone who carries it.',
     'A wizard in grey, a dark tower topped with an eye, and a long walk to a mountain of fire.',
     'Frodo, Gandalf and Aragorn all walk these lands, where the One Ring was forged.',
   ],

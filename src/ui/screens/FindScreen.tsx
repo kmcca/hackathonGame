@@ -1,3 +1,4 @@
+import { useVoice } from '../../audio/useVoice'
 import { useMemo } from 'react'
 import { bearing, distanceInLeagues, proximity } from '../../game/geo'
 import { SCORING, scoreLocation } from '../../game/scoring'
@@ -6,9 +7,9 @@ import type { Action, GameState } from '../../game/state'
 import { mark } from '../../story/mark'
 import { getTarget, getWorld } from '../../worlds'
 import type { Pin } from '../../worlds'
-import { ClueLadder } from '../ClueLadder'
-import { CompassArrow, Pips, ProximityShape } from '../icons'
+import { CompassArrow, ProximityShape } from '../icons'
 import { ActionBar, MarkStrip, ScreenHeading } from '../Layout'
+import { ProximityKey } from '../ProximityKey'
 import { StoryMap } from '../StoryMap'
 
 interface Props {
@@ -39,16 +40,24 @@ export function FindScreen({ state, dispatch }: Props) {
 
   const last = results[results.length - 1]
   const pulse = shouldPulseTarget(state)
-  const earned = scoreLocation({ wrongPins: wrongPins(state), cluesUsed: find.cluesUsed })
-  const allClues = find.cluesUsed >= world.locationClues.length
+  const earned = scoreLocation({ wrongPins: wrongPins(state) })
 
-  const line = [last ? mark.findResult(last.proximity.band, target.name) : mark.findStart(target.name), pulse ? mark.findPulse : '']
+  const bandVoice = { veryClose: 'WHERE-02', close: 'WHERE-03', far: 'WHERE-04', veryFar: 'WHERE-05' } as const
+  const voiceIds =
+    last?.proximity.band === 'found'
+      ? null
+      : last
+        ? [bandVoice[last.proximity.band], ...(pulse ? ['WHERE-06'] : [])]
+        : ['WHERE-01']
+  useVoice(voiceIds, `${last?.pin.id ?? 'start'}-${pulse}`)
+
+  const line = [last ? mark.findResult(last.proximity.band, target.name) : mark.findStart, pulse ? mark.findPulse : '']
     .filter(Boolean)
     .join(' ')
 
   return (
     <main className="screen">
-      <ScreenHeading hint={`Mark says the way out lies at ${target.name}. Tap a place to see how far you are and which way to go.`}>
+      <ScreenHeading hint="Tap a place to see how close you are and which way to go.">
         Where does the way out lie?
       </ScreenHeading>
       <div className="split split--map-first">
@@ -62,6 +71,7 @@ export function FindScreen({ state, dispatch }: Props) {
               disabled: find.solved,
             }}
           />
+          <ProximityKey />
         </div>
         <div className="split__side">
           <MarkStrip>{line}</MarkStrip>
@@ -76,7 +86,7 @@ export function FindScreen({ state, dispatch }: Props) {
                     <p>You found it.</p>
                   ) : (
                     <p>
-                      {last.leagues} leagues away, to the {last.bearing.label}. <strong>{last.proximity.label}.</strong>
+                      <strong>{last.proximity.label}.</strong> Head {last.bearing.label}.
                     </p>
                   )}
                 </div>
@@ -87,16 +97,6 @@ export function FindScreen({ state, dispatch }: Props) {
             )}
           </section>
 
-          {!find.solved && (
-            <ClueLadder
-              title="Mark’s clues"
-              clues={world.locationClues}
-              used={find.cluesUsed}
-              nextCost={allClues ? null : SCORING.location.clue}
-              onAsk={() => dispatch({ type: 'LOCATION_CLUE' })}
-            />
-          )}
-
           {results.length > 1 && (
             <section aria-labelledby="tried-title">
               <h2 id="tried-title">Places tried</h2>
@@ -106,9 +106,8 @@ export function FindScreen({ state, dispatch }: Props) {
                     <ProximityShape band={r.proximity.band} size="1.25rem" />
                     <span className="tried__name">{r.pin.name}</span>
                     <span className="tried__detail">
-                      {r.proximity.band === 'found' ? 'Found' : `${r.leagues} leagues, ${r.bearing.label}`}
+                      {r.proximity.band === 'found' ? 'Found' : `${r.proximity.label}. Head ${r.bearing.label}.`}
                     </span>
-                    <Pips count={r.proximity.pips} />
                   </li>
                 ))}
               </ul>

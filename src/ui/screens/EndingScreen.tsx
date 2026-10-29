@@ -1,3 +1,4 @@
+import { useVoice } from '../../audio/useVoice'
 import veracafe from '../../assets/veracafe.png'
 import type { GameState, Scores } from '../../game/state'
 import { mark } from '../../story/mark'
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function EndingScreen({ state, scores, onReplay }: Props) {
+  useVoice('END-01', 'ending')
   return (
     <main className="screen screen--ending">
       <img

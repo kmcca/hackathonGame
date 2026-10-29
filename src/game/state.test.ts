@@ -162,11 +162,10 @@ describe('dead ends', () => {
     expect(state.identify.solved).toBe(true)
     state = reducer(state, { type: 'CONTINUE' })
 
-    // Every wrong pin and clue, then the target.
+    // Every wrong pin, then the target.
     for (const pin of world.pins.filter((p) => p.id !== world.targetId)) {
       state = reducer(state, { type: 'TAP_PIN', pinId: pin.id })
     }
-    for (let i = 0; i < 3; i++) state = reducer(state, { type: 'LOCATION_CLUE' })
     state = reducer(state, { type: 'TAP_PIN', pinId: world.targetId })
     expect(state.find.solved).toBe(true)
     state = reducer(state, { type: 'CONTINUE' })

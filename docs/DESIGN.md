@@ -54,6 +54,6 @@ Content is left-aligned. The Binding and ending centre their content because the
 
 - Touch targets are at least 2.75rem with 0.5rem gaps. Pins are real buttons and arrow keys move focus between them.
 - Text is at least 1rem. Text over the map sits on dark panels.
-- Proximity uses a word, a shape and filled pips, plus the compass arrow and its spoken form.
+- Proximity uses a word and a shape, plus the compass arrow and its spoken form.
 - Motion is under 300ms except the two moments above. It is turned off by the OS setting or the in-game toggle.
 - z-index scale: dropdown 100, modal 200, tooltip 300, notification 400. Nothing is above 500.

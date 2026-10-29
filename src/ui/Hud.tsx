@@ -46,7 +46,7 @@ export function Hud({ bare, fragments, fragmentsTotal, score, maxScore }: HudPro
 }
 
 function Settings() {
-  const { textSize, setTextSize, reduceMotion, setReduceMotion } = usePrefs()
+  const { textSize, setTextSize, reduceMotion, setReduceMotion, voice, setVoice } = usePrefs()
   const [open, setOpen] = useState(false)
   const toggle = useRef<HTMLButtonElement>(null)
 
@@ -96,6 +96,10 @@ function Settings() {
           <label className="settings__switch">
             <input type="checkbox" checked={reduceMotion} onChange={(event) => setReduceMotion(event.target.checked)} />
             <span>Reduce motion</span>
+          </label>
+          <label className="settings__switch">
+            <input type="checkbox" checked={voice} onChange={(event) => setVoice(event.target.checked)} />
+            <span>Play voices</span>
           </label>
           <button type="button" className="button button--primary" onClick={() => setOpen(false)}>
             Done
