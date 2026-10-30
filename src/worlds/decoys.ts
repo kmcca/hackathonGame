@@ -10,7 +10,6 @@ export interface Decoy {
 }
 
 export const decoys: Decoy[] = [
-  { story: 'The Chronicles of Narnia', name: 'Narnia', aliases: ['narnia'] },
   { story: "Alice's Adventures in Wonderland", name: 'Wonderland', aliases: ['alice in wonderland'] },
   { story: 'Peter Pan', name: 'Neverland', aliases: ['never land'] },
   { story: 'A Wizard of Earthsea', name: 'Earthsea', aliases: ['earthsea'] },
@@ -20,6 +19,19 @@ export const decoys: Decoy[] = [
   { story: 'The NeverEnding Story', name: 'Fantasia', aliases: ['fantasia', 'never ending story'] },
   { story: 'The Book of Three', name: 'Prydain', aliases: ['the chronicles of prydain', 'prydain'] },
   { story: "Gulliver's Travels", name: 'Lilliput', aliases: ['gullivers travels', 'lilliput'] },
-  { story: 'Winnie-the-Pooh', name: 'The Hundred Acre Wood', aliases: ['hundred acre wood', 'winnie the pooh'] },
   { story: 'Bridge to Terabithia', name: 'Terabithia', aliases: ['terabithia'] },
+  { story: 'The Wheel of Time', name: 'The Wheel of Time', aliases: ['wheel of time', 'randland'] },
+  { story: 'Redwall', name: 'Mossflower', aliases: ['redwall', 'mossflower'] },
+  { story: 'The Wind in the Willows', name: 'The Riverbank', aliases: ['wind in the willows', 'toad hall'] },
+  { story: 'Watership Down', name: 'Watership Down', aliases: ['watership down'] },
+  { story: 'Robinson Crusoe', name: "Crusoe's Island", aliases: ['robinson crusoe', 'crusoe'] },
+  {
+    story: 'Percy Jackson & the Olympians',
+    name: 'Camp Half-Blood',
+    aliases: ['percy jackson', 'camp half blood', 'camp half-blood'],
+  },
+  { story: 'The Maze Runner', name: 'The Glade', aliases: ['maze runner', 'the glade'] },
+  { story: 'Dune', name: 'Arrakis', aliases: ['dune', 'arrakis'] },
+  { story: 'The Princess Bride', name: 'Florin', aliases: ['princess bride', 'florin'] },
+  { story: 'The Jungle Book', name: 'The Seonee Jungle', aliases: ['jungle book', 'seonee'] },
 ]

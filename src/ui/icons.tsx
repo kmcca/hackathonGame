@@ -1,4 +1,5 @@
 import type { ProximityBand } from '../game/geo'
+import type { RuneId } from '../game/lock'
 
 /** Each band has its own shape, so closeness is never carried by colour alone. */
 export function ProximityShape({ band, size = '1.5rem' }: { band: ProximityBand; size?: string }) {
@@ -100,6 +101,32 @@ export function GearIcon() {
         strokeWidth="2"
         strokeLinecap="round"
       />
+    </svg>
+  )
+}
+
+/** A rune on the lock. Each has its own outline, so no rune is told apart by colour. */
+export function RuneGlyph({ id }: { id: RuneId }) {
+  return (
+    <svg className="rune-glyph" viewBox="0 0 100 100" aria-hidden="true">
+      {id === 'moon' && <path d="M64 8C36 12 16 32 16 56c0 24 20 38 44 34C42 80 34 62 40 44 44 30 52 18 64 8z" />}
+      {id === 'leaf' && (
+        <>
+          <path d="M50 6C86 30 92 64 50 94 8 64 14 30 50 6z" />
+          <path d="M50 30v52" className="rune-glyph__vein" />
+        </>
+      )}
+      {id === 'flame' && (
+        <path d="M50 4C58 30 82 42 80 66c-2 18-16 28-30 28S22 84 20 66c-1-14 8-22 14-32 4 10 8 14 12 14C46 34 44 20 50 4z" />
+      )}
+      {id === 'star' && <path d="M50 6l11 32h34L67 58l11 34-28-21-28 21 11-34L5 38h34z" />}
+      {id === 'wave' && (
+        <g className="rune-glyph__wave">
+          <path d="M8 30q14-16 28 0t28 0 28 0" />
+          <path d="M8 52q14-16 28 0t28 0 28 0" />
+          <path d="M8 74q14-16 28 0t28 0 28 0" />
+        </g>
+      )}
     </svg>
   )
 }

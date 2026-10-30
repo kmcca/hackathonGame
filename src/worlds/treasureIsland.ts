@@ -1,0 +1,135 @@
+import unlabelled from '../../map_images/treasure_island_unlabelled.jpg'
+import labelled from '../../map_images/treasure_island_labelled.jpg'
+import type { World } from './types'
+
+export const treasureIsland: World = {
+  id: 'treasureIsland',
+  story: 'Treasure Island',
+  name: 'Treasure Island',
+  aliases: ['treasure island', 'robert louis stevenson', 'long john silver'],
+  maps: { unlabelled, labelled, width: 1207, height: 864 },
+  leaguesAcross: 20,
+  pins: [
+    { id: 'foremast-hill', name: 'Foremast Hill', x: 0.4, y: 0.175 },
+    { id: 'hispaniola', name: 'The Hispaniola', x: 0.61, y: 0.165 },
+    { id: 'spyglass-hill', name: 'Spyglass Hill', x: 0.34, y: 0.51 },
+    { id: 'spring', name: 'The Spring', x: 0.53, y: 0.44 },
+    { id: 'cape-of-the-woods', name: 'Cape of the Woods', x: 0.275, y: 0.66 },
+    { id: 'mizzenmast-hill', name: 'Mizzenmast Hill', x: 0.38, y: 0.79 },
+    { id: 'haulbowline-head', name: 'Haulbowline Head', x: 0.33, y: 0.86 },
+    { id: 'skeleton-island', name: 'Skeleton Island', x: 0.51, y: 0.78 },
+  ],
+  exits: [
+    {
+      pinId: 'spyglass-hill',
+      clues: [
+        'The way out lies high on the island, on its tallest peak.',
+        'It is named for the tool a captain uses to look across the sea.',
+        'Look for the great craggy mountain on the west side of the island, just above the middle.',
+      ],
+    },
+    {
+      pinId: 'hispaniola',
+      clues: [
+        'The way out lies on the water, at the northern edge of the map.',
+        'It is the ship that carried every soul to the island, and it can carry them away again.',
+        'Look for the ship in the north, east of Foremast Hill and above the Spring.',
+      ],
+    },
+    {
+      pinId: 'skeleton-island',
+      clues: [
+        'The way out lies in the south of the map, away from the high ground.',
+        'It is named for what grins from the ground, a warning to any who come ashore.',
+        'Look in the south of the island, below the Spring and east of Mizzenmast Hill.',
+      ],
+    },
+  ],
+  worldClues: [
+    'A boy at a seaside inn finds a dead sailor\'s sea chest, and inside it a map to a fortune.',
+    'A one-legged cook with a parrot on his shoulder, a black spot, and a cry of "Pieces of eight!"',
+    'Yo ho ho and a bottle of rum: Jim Hawkins and Long John Silver sail the Hispaniola for buried gold.',
+  ],
+  trivia: [
+    {
+      id: 'parrot',
+      difficulty: 'easy',
+      prompt: 'What kind of pet sits on Long John Silver\'s shoulder?',
+      options: ['A parrot', 'A monkey', 'A cat', 'A ferret'],
+      answer: 0,
+      hint: 'It squawks "Pieces of eight!"',
+    },
+    {
+      id: 'jim',
+      difficulty: 'easy',
+      prompt: 'Who is the young narrator of the story?',
+      options: ['Jim Hawkins', 'Tom Sawyer', 'Ben Gunn', 'Billy Bones'],
+      answer: 0,
+      hint: 'His family runs the Admiral Benbow Inn.',
+    },
+    {
+      id: 'leg',
+      difficulty: 'easy',
+      prompt: 'What is Long John Silver missing?',
+      options: ['An eye', 'A leg', 'A hand', 'An ear'],
+      answer: 1,
+      hint: 'He gets about on a crutch.',
+    },
+    {
+      id: 'hispaniola-ship',
+      difficulty: 'moderate',
+      prompt: 'What is the name of the ship that sails to the island?',
+      options: ['The Black Pearl', 'The Santa Maria', 'The Hispaniola', 'The Jolly Roger'],
+      answer: 2,
+      hint: 'It is the ship drawn in the corner of the map.',
+    },
+    {
+      id: 'black-spot',
+      difficulty: 'moderate',
+      prompt: 'What does Blind Pew deliver to Billy Bones that terrifies him?',
+      options: ['A letter of marque', 'A black spot', 'A skull-and-crossbones flag', 'A broken compass'],
+      answer: 1,
+      hint: 'It is a mark on a scrap of paper, and it means a death sentence.',
+    },
+    {
+      id: 'pieces-of-eight',
+      difficulty: 'moderate',
+      prompt: 'What are "pieces of eight"?',
+      options: ['Spanish silver coins', 'Pirate swords', 'Eight-man crews', 'Cannon balls'],
+      answer: 0,
+      hint: 'Pirates counted them in a treasure chest.',
+    },
+    {
+      id: 'flint',
+      difficulty: 'hard',
+      prompt: 'Which pirate captain buried the treasure?',
+      options: ['Captain Kidd', 'Captain Flint', 'Blackbeard', 'Captain Morgan'],
+      answer: 1,
+      hint: 'The parrot is named after him.',
+    },
+    {
+      id: 'benbow',
+      difficulty: 'hard',
+      prompt: 'What is the name of the inn run by Jim Hawkins\' family?',
+      options: ['The Admiral Benbow', 'The Spyglass', 'The Hispaniola Arms', 'The Black Dog'],
+      answer: 0,
+      hint: 'It is named after an English admiral.',
+    },
+    {
+      id: 'ben-gunn',
+      difficulty: 'hard',
+      prompt: 'Who had dug up and moved the treasure before the pirates arrived?',
+      options: ['Israel Hands', 'Ben Gunn', 'Squire Trelawney', 'Dr Livesey'],
+      answer: 1,
+      hint: 'He had been marooned on the island for three years, and he really missed cheese.',
+    },
+    {
+      id: 'smollett',
+      difficulty: 'moderate',
+      prompt: 'Who is the captain of the Hispaniola?',
+      options: ['Captain Flint', 'Captain Smollett', 'Long John Silver', 'Billy Bones'],
+      answer: 1,
+      hint: 'He distrusts the crew from the very start.',
+    },
+  ],
+}

@@ -3,7 +3,7 @@ import { QUESTION_MIX, pickQuestionOrder } from '../game/state'
 import { worlds } from '.'
 
 describe.each(worlds)('$name content', (world) => {
-  it('has unique pins inside the map and a real target', () => {
+  it('has unique pins inside the map', () => {
     const ids = world.pins.map((p) => p.id)
     expect(new Set(ids).size).toBe(ids.length)
     for (const pin of world.pins) {
@@ -12,7 +12,13 @@ describe.each(worlds)('$name content', (world) => {
       expect(pin.y).toBeGreaterThan(0)
       expect(pin.y).toBeLessThan(1)
     }
-    expect(ids).toContain(world.targetId)
+  })
+
+  it('has three distinct exits on real pins', () => {
+    expect(world.exits).toHaveLength(3)
+    const exitIds = world.exits.map((e) => e.pinId)
+    expect(new Set(exitIds).size).toBe(3)
+    for (const id of exitIds) expect(world.pins.map((p) => p.id)).toContain(id)
   })
 
   it('keeps pins far enough apart to tap on a 42rem map', () => {
@@ -29,7 +35,8 @@ describe.each(worlds)('$name content', (world) => {
   })
 
   it('has three non-empty clues of each kind', () => {
-    for (const clue of [...world.worldClues, ...world.locationClues]) expect(clue.trim().length).toBeGreaterThan(10)
+    const clues = [...world.worldClues, ...world.exits.flatMap((e) => e.clues)]
+    for (const clue of clues) expect(clue.trim().length).toBeGreaterThan(10)
   })
 
   it('has well-formed, unique trivia', () => {

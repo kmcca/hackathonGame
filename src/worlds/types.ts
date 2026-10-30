@@ -1,4 +1,4 @@
-export type WorldId = 'westeros' | 'middleEarth' | 'oz'
+export type WorldId = 'westeros' | 'middleEarth' | 'oz' | 'narnia' | 'treasureIsland' | 'hundredAcreWood' | 'panem'
 
 /** A tappable place. x and y are fractions (0-1) of the map image width and height. */
 export interface Pin {
@@ -21,6 +21,14 @@ export interface TriviaQuestion {
   hint: string
 }
 
+/** A place where the way out can lie, with clues about where it sits on the map. */
+export interface Exit {
+  /** Id of the pin where the way out lies. */
+  pinId: string
+  /** Three clues about where the pin sits on the map, vaguest first. */
+  clues: [string, string, string]
+}
+
 export interface World {
   id: WorldId
   /** The book or franchise the world comes from, for example "The Lord of the Rings". */
@@ -39,12 +47,10 @@ export interface World {
   /** How many in-world leagues the full width of the map spans. */
   leaguesAcross: number
   pins: Pin[]
-  /** Id of the pin where the way out lies. */
-  targetId: string
+  /** Three places the way out might lie. Each game picks one at random. */
+  exits: [Exit, Exit, Exit]
   /** Three clues about the world, vaguest first. The last is a near-giveaway. */
   worldClues: [string, string, string]
-  /** Three clues about where the target sits on the map, vaguest first. */
-  locationClues: [string, string, string]
   /**
    * More questions than are asked, so replays vary. Each game asks one easy,
    * two moderate and two hard questions, in that order.

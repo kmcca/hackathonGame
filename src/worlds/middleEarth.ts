@@ -34,16 +34,36 @@ export const middleEarth: World = {
     { id: 'osgiliath', name: 'Osgiliath', x: 0.645, y: 0.78 },
     { id: 'sea-of-rhun', name: 'Sea of Rhûn', x: 0.865, y: 0.43 },
   ],
-  targetId: 'mount-doom',
+  exits: [
+    {
+      pinId: 'mount-doom',
+      clues: [
+        'The way out lies in the far east, where the sky is stained with ash.',
+        'It is a smoking mountain in the darkest land, west of the Dark Tower.',
+        'Look for the volcano in the east, with the black tower to its right.',
+      ],
+    },
+    {
+      pinId: 'rivendell',
+      clues: [
+        'The way out lies in the north, tucked in the foothills of the great mountains.',
+        'It is a hidden valley where elves keep a last homely house, and a famous council was held.',
+        'Look for the valley in the upper middle of the map, north of Moria and east of Bree.',
+      ],
+    },
+    {
+      pinId: 'grey-havens',
+      clues: [
+        'The way out lies at the far western edge of the map, where the land meets the sea.',
+        'Ships leave this harbour for lands where mortals may not follow.',
+        'Look for the harbour in the top-left corner of the map, west of Hobbiton.',
+      ],
+    },
+  ],
   worldClues: [
     'A small trinket of gold was lost here long ago, and it has caused no end of trouble for everyone who carries it.',
     'A wizard in grey, a dark tower topped with an eye, and a long walk to a mountain of fire.',
     'Frodo, Gandalf and Aragorn all walk these lands, where the One Ring was forged.',
-  ],
-  locationClues: [
-    'The way out lies in the far east, where the sky is stained with ash.',
-    'It is a smoking mountain in the darkest land, west of the Dark Tower.',
-    'Look for the volcano in the east, with the black tower to its right.',
   ],
   trivia: [
     {
@@ -109,6 +129,22 @@ export const middleEarth: World = {
       options: ['Ungoliant', 'Morgoth', 'Glaurung', 'Gothmog'],
       answer: 1,
       hint: 'He was the master of Sauron, and his crown held the Silmarils.',
+    },
+    {
+      id: 'shadowfax',
+      difficulty: 'moderate',
+      prompt: "What is the name of Gandalf's horse?",
+      options: ['Shadowfax', 'Brego', 'Hasufel', 'Bill'],
+      answer: 0,
+      hint: 'He is the lord of all horses, and no one else can ride him.',
+    },
+    {
+      id: 'celebrimbor',
+      difficulty: 'hard',
+      prompt: 'Which Elven smith forged the Rings of Power?',
+      options: ['Fëanor', 'Finrod', 'Celebrimbor', 'Gil-galad'],
+      answer: 2,
+      hint: 'He lived in Eregion, and Sauron deceived him.',
     },
   ],
 }

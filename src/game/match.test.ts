@@ -54,7 +54,7 @@ describe('matches', () => {
   })
 
   it('rejects other stories and empty input', () => {
-    expect(matches('Narnia', westeros)).toBe(false)
+    expect(matches('Earthsea', westeros)).toBe(false)
     expect(matches('', westeros)).toBe(false)
     expect(matches('   ', westeros)).toBe(false)
   })
@@ -86,8 +86,8 @@ describe('suggest', () => {
   })
 
   it('includes decoys so suggestions never give the answer away', () => {
-    const result = suggest('n', KNOWN_STORIES)
-    expect(result).toContain('The Chronicles of Narnia (Narnia)')
+    const result = suggest('e', KNOWN_STORIES)
+    expect(result).toContain('A Wizard of Earthsea (Earthsea)')
     expect(result.length).toBeGreaterThan(1)
   })
 

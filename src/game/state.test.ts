@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getTarget, getWorld, worlds } from '../worlds'
+import { getWorld, worlds } from '../worlds'
 import type { WorldId } from '../worlds'
 import { INTRO_BEATS } from '../story/intro'
 import {
@@ -8,6 +8,7 @@ import {
   computeScores,
   createGame,
   fragmentsEarned,
+  pickExitId,
   pickQuestionOrder,
   pickWorldId,
   reducer,
@@ -24,7 +25,7 @@ function started(worldId: WorldId): GameState {
   const world = getWorld(worldId)
   const order = world.trivia.slice(0, QUESTIONS_ASKED).map((_, i) => i)
   return run(
-    createGame(worldId, order),
+    createGame(worldId, order, world.exits[0].pinId),
     { type: 'SET_NAME', name: 'Ada' },
     { type: 'START_STORY' },
     { type: 'SKIP_INTRO' },
@@ -35,12 +36,12 @@ const wrongWorld = (id: WorldId) => worlds.find((w) => w.id !== id)!
 
 describe('intro', () => {
   it('needs a name before the story starts', () => {
-    const blank = run(createGame('oz', [0, 1, 2]), { type: 'SET_NAME', name: '   ' }, { type: 'START_STORY' })
+    const blank = run(createGame('oz', [0, 1, 2], 'poppy-field'), { type: 'SET_NAME', name: '   ' }, { type: 'START_STORY' })
     expect(blank.introStep).toBe(0)
   })
 
   it('trims the name and walks every beat into the first stage', () => {
-    let state = run(createGame('oz', [0, 1, 2]), { type: 'SET_NAME', name: '  Ada ' }, { type: 'START_STORY' })
+    let state = run(createGame('oz', [0, 1, 2], 'poppy-field'), { type: 'SET_NAME', name: '  Ada ' }, { type: 'START_STORY' })
     expect(state.playerName).toBe('Ada')
     for (let i = 0; i < INTRO_BEATS.length; i++) state = reducer(state, { type: 'ADVANCE_INTRO' })
     expect(state.phase).toBe('identifyWorld')
@@ -61,7 +62,7 @@ describe('identify the world', () => {
   it('records wrong guesses, including other known stories', () => {
     const state = run(
       started('westeros'),
-      { type: 'GUESS_WORLD', text: 'Narnia' },
+      { type: 'GUESS_WORLD', text: 'Earthsea' },
       { type: 'GUESS_WORLD', text: wrongWorld('westeros').name },
     )
     expect(state.identify.wrongGuesses).toHaveLength(2)
@@ -85,7 +86,7 @@ describe('identify the world', () => {
   it('offers the multiple-choice fallback only after enough misses', () => {
     let state = run(started('oz'), { type: 'FALLBACK_GUESS', worldId: 'oz' })
     expect(state.identify.solved).toBe(false)
-    for (let i = 0; i < FALLBACK_AFTER; i++) state = reducer(state, { type: 'GUESS_WORLD', text: 'Narnia' })
+    for (let i = 0; i < FALLBACK_AFTER; i++) state = reducer(state, { type: 'GUESS_WORLD', text: 'Earthsea' })
     state = reducer(state, { type: 'FALLBACK_GUESS', worldId: 'oz' })
     expect(state.identify.solved).toBe(true)
     expect(state.identify.usedFallback).toBe(true)
@@ -99,29 +100,30 @@ describe('find the location', () => {
 
   it('counts wrong pins and solves on the target', () => {
     const world = getWorld('oz')
-    const wrong = world.pins.find((p) => p.id !== world.targetId)!
+    const exitId = world.exits[0].pinId
+    const wrong = world.pins.find((p) => p.id !== exitId)!
     const state = run(
       atFind('oz'),
       { type: 'TAP_PIN', pinId: wrong.id },
       { type: 'TAP_PIN', pinId: wrong.id },
-      { type: 'TAP_PIN', pinId: world.targetId },
+      { type: 'TAP_PIN', pinId: exitId },
     )
-    expect(state.find.guessedPinIds).toEqual([wrong.id, world.targetId])
+    expect(state.find.guessedPinIds).toEqual([wrong.id, exitId])
     expect(state.find.solved).toBe(true)
     expect(computeScores(state).location).toBe(100 - SCORING.location.wrongPin)
   })
 
   it('pulses the target after enough wrong pins, then stops once solved', () => {
     const world = getWorld('westeros')
-    const wrongPins = world.pins.filter((p) => p.id !== world.targetId)
     let state = atFind('westeros')
+    const wrongPins = world.pins.filter((p) => p.id !== state.exitId)
     for (const pin of wrongPins.slice(0, SCORING.location.pulseAfter - 1)) {
       state = reducer(state, { type: 'TAP_PIN', pinId: pin.id })
     }
     expect(shouldPulseTarget(state)).toBe(false)
     state = reducer(state, { type: 'TAP_PIN', pinId: wrongPins[SCORING.location.pulseAfter - 1].id })
     expect(shouldPulseTarget(state)).toBe(true)
-    state = reducer(state, { type: 'TAP_PIN', pinId: getTarget(world).id })
+    state = reducer(state, { type: 'TAP_PIN', pinId: state.exitId })
     expect(shouldPulseTarget(state)).toBe(false)
   })
 
@@ -137,7 +139,7 @@ describe('trivia', () => {
       started('oz'),
       { type: 'GUESS_WORLD', text: 'oz' },
       { type: 'CONTINUE' },
-      { type: 'TAP_PIN', pinId: getWorld('oz').targetId },
+      { type: 'TAP_PIN', pinId: 'poppy-field' },
       { type: 'CONTINUE' },
       { type: 'CONTINUE' },
     )
@@ -152,7 +154,7 @@ describe('dead ends', () => {
     let state = started(id)
 
     // Every wrong guess, every clue, the labelled map, then the fallback.
-    for (let i = 0; i < 6; i++) state = reducer(state, { type: 'GUESS_WORLD', text: 'Narnia' })
+    for (let i = 0; i < 6; i++) state = reducer(state, { type: 'GUESS_WORLD', text: 'Earthsea' })
     for (let i = 0; i < 3; i++) state = reducer(state, { type: 'WORLD_CLUE' })
     state = reducer(state, { type: 'SHOW_LABELLED' })
     for (const other of worlds.filter((w) => w.id !== id)) {
@@ -163,10 +165,10 @@ describe('dead ends', () => {
     state = reducer(state, { type: 'CONTINUE' })
 
     // Every wrong pin, then the target.
-    for (const pin of world.pins.filter((p) => p.id !== world.targetId)) {
+    for (const pin of world.pins.filter((p) => p.id !== state.exitId)) {
       state = reducer(state, { type: 'TAP_PIN', pinId: pin.id })
     }
-    state = reducer(state, { type: 'TAP_PIN', pinId: world.targetId })
+    state = reducer(state, { type: 'TAP_PIN', pinId: state.exitId })
     expect(state.find.solved).toBe(true)
     state = reducer(state, { type: 'CONTINUE' })
 
@@ -196,11 +198,12 @@ describe('replay', () => {
   it('keeps the name, resets progress and skips the intro', () => {
     let state = started('oz')
     state = { ...state, phase: 'ending' }
-    const next = reducer(state, { type: 'REPLAY', worldId: 'westeros', order: [0, 1, 2] })
+    const next = reducer(state, { type: 'REPLAY', worldId: 'westeros', order: [0, 1, 2], exitId: 'sunspear' })
     expect(next.phase).toBe('identifyWorld')
     expect(next.playerName).toBe('Ada')
     expect(next.worldId).toBe('westeros')
     expect(next.replay).toBe(true)
+    expect(next.exitId).toBe('sunspear')
     expect(next.identify.wrongGuesses).toHaveLength(0)
   })
 
@@ -210,6 +213,12 @@ describe('replay', () => {
         expect(pickWorldId(() => roll, id)).not.toBe(id)
       }
     }
+  })
+
+  it('picks each of the three exits depending on the roll', () => {
+    const world = getWorld('oz')
+    const picked = [0, 0.4, 0.99].map((roll) => pickExitId(world, () => roll))
+    expect(picked).toEqual(world.exits.map((e) => e.pinId))
   })
 
   it('asks the right number of distinct questions', () => {

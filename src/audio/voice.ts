@@ -1,5 +1,8 @@
 import markFile from '../../voice_audio/mark_dialogue_audio_nonspecific.mp3'
 import narrationFile from '../../voice_audio/narration_audio.mp3'
+import findFile from '../../voice_audio/FIND-01.mp3'
+import lockFile from '../../voice_audio/BIND-08.mp3'
+import spellFile from '../../voice_audio/SPELL-01-04.mp3'
 
 /**
  * A spoken line is a slice of a longer recording. Times are in seconds from the start of the file.
@@ -42,7 +45,11 @@ export const CLIPS: Record<string, Clip> = {
   'BIND-05': { file: markFile, start: 106.1, end: 109.2 },
   'BIND-06': { file: markFile, start: 110.0, end: 111.3 },
   'BIND-07': { file: markFile, start: 112.1, end: 113.6 },
-  // SPELL-01 to SPELL-04 are not used yet: the recording stops after the second spell line.
+  // Whole short files: start at 0, and end is the file's length (2.51s, 7.63s and 9.33s) plus a hair.
+  'FIND-01': { file: findFile, start: 0, end: 2.6 },
+  'BIND-08': { file: lockFile, start: 0, end: 7.7 },
+  // All four spell lines in one take, so SPELL-01 to SPELL-04 have no clips of their own.
+  'SPELL-01-04': { file: spellFile, start: 0, end: 9.4 },
   'END-01': { file: markFile, start: 125.95, end: 134.15 },
 }
 

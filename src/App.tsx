@@ -6,6 +6,7 @@ import {
   computeScores,
   createGame,
   fragmentsEarned,
+  pickExitId,
   pickQuestionOrder,
   pickWorldId,
   reducer,
@@ -24,7 +25,8 @@ import { TriviaScreen } from './ui/screens/TriviaScreen'
 
 function newGame(): GameState {
   const worldId = pickWorldId(Math.random)
-  return createGame(worldId, pickQuestionOrder(getWorld(worldId), Math.random))
+  const world = getWorld(worldId)
+  return createGame(worldId, pickQuestionOrder(world, Math.random), pickExitId(world, Math.random))
 }
 
 const isPinTool = () => window.location.pathname.endsWith('/pin-tool') || window.location.hash === '#pin-tool'
@@ -53,7 +55,13 @@ function Game() {
 
   const replay = useCallback(() => {
     const worldId = pickWorldId(Math.random, state.worldId)
-    dispatch({ type: 'REPLAY', worldId, order: pickQuestionOrder(getWorld(worldId), Math.random) })
+    const world = getWorld(worldId)
+    dispatch({
+      type: 'REPLAY',
+      worldId,
+      order: pickQuestionOrder(world, Math.random),
+      exitId: pickExitId(world, Math.random),
+    })
   }, [state.worldId])
 
   const finishBinding = useCallback(() => dispatch({ type: 'FINISH_BINDING' }), [])
