@@ -4,7 +4,7 @@ Every line the game speaks, in play order. Each has a stable ID you can use as t
 
 **Voices:** the _Narrator_ is a storybook voice (warm, unhurried, a little playful; the intro leans on alliteration). _Mark_ is a wizard who guides the player from the edge of the page: warm, a little wry, quick and short. The _spell_ is a four-line verse, spoken solemnly.
 
-**Totals:** 79 lines (generated from the game source, so the wording matches exactly).
+**Totals:** 78 lines (generated from the game source, so the wording matches exactly).
 
 **Player name:** 13 lines contain `{name}`, which the game replaces with whatever the player types. A recording cannot say a name it has never heard, so each of those lines has a **Name-free** version directly beneath it. Record the name-free version. The narrator beats switch to "you" (the game currently says the player's name in the third person), and the spell's second line becomes "hear the words that now are said", which keeps the rhyme with "thread".
 
@@ -151,14 +151,8 @@ Every line the game speaks, in play order. Each has a stable ID you can use as t
 **WHERE-06** · Mark · _after six wrong places_
 > My lantern flickers over one of these places. Follow the glow.
 
-**WHERE-07** · Mark · _found: Winterfell_
-> There it is: Winterfell! The way out opens.
-
-**WHERE-08** · Mark · _found: Mount Doom_
-> There it is: Mount Doom! The way out opens.
-
-**WHERE-09** · Mark · _found: Emerald City_
-> There it is: Emerald City! The way out opens.
+**FIND-01** · Mark · _found: any place · file `FIND-01.mp3`_
+> There it is! The lock is waiting here.
 
 
 ## 4. Forge the key: trivia (Mark)
@@ -255,7 +249,10 @@ Every line the game speaks, in play order. Each has a stable ID you can use as t
 >
 > **Name-free:** Five pieces. Fit each into its place, then speak the spell and hold your nerve until the words are done.
 
-**BIND-02** · Mark · _all five pieces placed_
+**BIND-08** · Mark · _the key is whole and the lock appears · file `BIND-08.mp3`_
+> Whole at last! But the lock will not listen until its five runes are set in the right order. Read the clues.
+
+**BIND-02** · Mark · _the lock's runes are set right_
 > The key is whole, and it is warm to the touch. Now speak the spell.
 
 **BIND-03** · Mark · _after the spell_
@@ -267,11 +264,13 @@ Every line the game speaks, in play order. Each has a stable ID you can use as t
 **BIND-05** · Mark · _released early_
 > Too soon. Hold the seal for the whole spell.
 
-**BIND-06** · Mark · _while holding_
+**BIND-06** · Mark · _while holding · no longer played: the spell is spoken instead_
 > Keep holding…
 
 **BIND-07** · Mark · _hold complete_
 > The spell is spoken.
+
+_The four spell lines below are recorded as one take, `SPELL-01-04.mp3` (9.3 seconds). It plays while the seal is held, and the hold lasts as long as the recording._
 
 **SPELL-01** · The spell (spoken aloud, as the seal is held) · _reads as one verse, four lines_
 > Page and parchment, ink and thread,

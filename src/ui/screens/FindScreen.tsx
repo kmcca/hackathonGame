@@ -45,13 +45,13 @@ export function FindScreen({ state, dispatch }: Props) {
   const bandVoice = { veryClose: 'WHERE-02', close: 'WHERE-03', far: 'WHERE-04', veryFar: 'WHERE-05' } as const
   const voiceIds =
     last?.proximity.band === 'found'
-      ? null
+      ? 'FIND-01'
       : last
         ? [bandVoice[last.proximity.band], ...(pulse ? ['WHERE-06'] : [])]
         : null // The opening line names the place, which the recording cannot.
   useVoice(voiceIds, `${last?.pin.id ?? 'start'}-${pulse}`)
 
-  const line = [last ? mark.findResult(last.proximity.band, target.name) : mark.findStart(target.name), pulse ? mark.findPulse : '']
+  const line = [last ? mark.findResult(last.proximity.band) : mark.findStart(target.name), pulse ? mark.findPulse : '']
     .filter(Boolean)
     .join(' ')
 

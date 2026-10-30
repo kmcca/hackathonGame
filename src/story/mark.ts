@@ -31,10 +31,10 @@ export const mark = {
     return `The way out lies at ${target}. Tap places on the map and I will tell you how far you are, and in which direction.`
   },
 
-  findResult(band: ProximityBand, target: string): string {
+  findResult(band: ProximityBand): string {
     switch (band) {
       case 'found':
-        return `There it is: ${target}! The way out opens.`
+        return 'There it is! The lock is waiting here.'
       case 'veryClose':
         return 'So close the ink is still wet.'
       case 'close':
@@ -70,6 +70,9 @@ export const mark = {
   bindingStart(name: string): string {
     return `Five pieces, ${name}. Fit each into its place, then speak the spell and hold your nerve until the words are done.`
   },
+
+  bindingLock:
+    'Whole at last! But the lock will not listen until its five runes are set in the right order. Read the clues.',
 
   ending(name: string): string {
     return `The page turns, ${name}. The creatures are still loose, and Hackathon 28 is where they will be lured home. Until then, well read.`

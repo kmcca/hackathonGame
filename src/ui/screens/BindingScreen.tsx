@@ -16,7 +16,7 @@ export function BindingScreen({ playerName, onFinish }: Props) {
 
   return (
     <main className="screen screen--binding">
-      <ScreenHeading hint="Fit the five pieces together, then speak the spell.">Bind the key</ScreenHeading>
+      <ScreenHeading hint="Fit the five pieces together, set the runes on the lock, then speak the spell.">Bind the key</ScreenHeading>
       <MarkStrip>{line}</MarkStrip>
       <BindingScene playerName={playerName} onFinish={onFinish} onMessage={onMessage} />
     </main>

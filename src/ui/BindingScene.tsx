@@ -1,13 +1,16 @@
 import { useSpeak } from '../audio/useVoice'
+import { clipSeconds } from '../audio/voice'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent, PointerEvent } from 'react'
-import { SPELL_LINES } from '../story/mark'
+import { SPELL_LINES, mark } from '../story/mark'
 import { fillName } from '../story/intro'
 import { CheckIcon, FRAGMENTS } from './icons'
 import { KEY_HEIGHT, KEY_PIECES, KEY_TOGETHER } from './keyArt'
 import type { FragmentId } from './icons'
+import { LockPuzzle } from './LockPuzzle'
 import { usePrefs } from './prefs'
 
+/** How long the seal is held when the spell is not being spoken aloud. With voice on, the hold lasts as long as the recording. */
 const HOLD_MS = 2400
 const TAPS_NEEDED = 5
 const SLAM_MS = 1500
@@ -22,7 +25,7 @@ interface BindingSceneProps {
   onMessage: (message: string) => void
 }
 
-type Step = 'assemble' | 'recite' | 'slam'
+type Step = 'assemble' | 'lock' | 'recite' | 'slam'
 
 export function BindingScene({ playerName, onFinish, onMessage }: BindingSceneProps) {
   const { reduceMotion } = usePrefs()
@@ -48,13 +51,19 @@ export function BindingScene({ playerName, onFinish, onMessage }: BindingScenePr
     setSelected(null)
     if (next.length === FRAGMENTS.length) {
       setNote('The key is whole.')
-      onMessage('The key is whole, and it is warm to the touch. Now speak the spell.')
-      speak(['BIND-02', 'BIND-04'])
-      setStep('recite')
+      onMessage(mark.bindingLock)
+      speak('BIND-08')
+      setStep('lock')
     } else {
       setNote(`The ${label(slot)} clicks into place.`)
     }
   }
+
+  const openLock = useCallback(() => {
+    onMessage('The key is whole, and it is warm to the touch. Now speak the spell.')
+    speak(['BIND-02', 'BIND-04'])
+    setStep('recite')
+  }, [onMessage, speak])
 
   const finishRecital = useCallback(() => {
     setStep('slam')
@@ -134,7 +143,9 @@ export function BindingScene({ playerName, onFinish, onMessage }: BindingScenePr
         </section>
       )}
 
-      {step !== 'assemble' && <Recital name={playerName} onDone={finishRecital} done={step === 'slam'} />}
+      {step === 'lock' && <LockPuzzle onOpen={openLock} />}
+
+      {(step === 'recite' || step === 'slam') && <Recital name={playerName} onDone={finishRecital} done={step === 'slam'} />}
 
       {step === 'slam' && <BookSlam />}
     </div>
@@ -154,6 +165,11 @@ interface RecitalProps {
 /** Hold-to-confirm: the spell is only spoken once the button has been held for the whole ritual. */
 function Recital({ name, onDone, done }: RecitalProps) {
   const speak = useSpeak()
+  const { voice } = usePrefs()
+  // With voice on, the seal is held for exactly as long as the spell takes to say.
+  const spellMs = (clipSeconds('SPELL-01-04') ?? 0) * 1000
+  const holdMs = voice && spellMs > 0 ? spellMs : HOLD_MS
+  const doneTimer = useRef(0)
   const [progress, setProgress] = useState(0)
   const [tapMode, setTapMode] = useState(false)
   const [message, setMessage] = useState('Press and hold the seal until the spell is spoken.')
@@ -173,10 +189,10 @@ function Recital({ name, onDone, done }: RecitalProps) {
     if (done || tapMode || start.current !== null) return
     start.current = performance.now()
     setMessage('Keep holding…')
-    speak('BIND-06')
+    speak('SPELL-01-04')
     const tick = (now: number) => {
       if (start.current === null) return
-      const next = Math.min(1, (now - start.current) / HOLD_MS)
+      const next = Math.min(1, (now - start.current) / holdMs)
       setProgress(next)
       if (next >= 1) {
         start.current = null
@@ -186,9 +202,15 @@ function Recital({ name, onDone, done }: RecitalProps) {
       frame.current = requestAnimationFrame(tick)
     }
     frame.current = requestAnimationFrame(tick)
-  }, [done, tapMode, onDone, speak])
+  }, [done, tapMode, onDone, speak, holdMs])
 
-  useEffect(() => () => cancelAnimationFrame(frame.current), [])
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(frame.current)
+      window.clearTimeout(doneTimer.current)
+    },
+    [],
+  )
 
   const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     if ((event.key === ' ' || event.key === 'Enter') && !event.repeat) {
@@ -214,11 +236,17 @@ function Recital({ name, onDone, done }: RecitalProps) {
   }
 
   const tap = () => {
-    if (done) return
+    // Once the last tap has landed, the spell is being said and further taps do nothing.
+    if (done || progress >= 1) return
     const next = Math.min(1, progress + 1 / TAPS_NEEDED)
     setProgress(next)
-    setMessage(next >= 1 ? 'The spell is spoken.' : `Tap again (${Math.ceil((1 - next) * TAPS_NEEDED)} to go).`)
-    if (next >= 1) onDone()
+    if (next < 1) {
+      setMessage(`Tap again (${Math.ceil((1 - next) * TAPS_NEEDED)} to go).`)
+      return
+    }
+    setMessage('The spell is being spoken…')
+    speak('SPELL-01-04')
+    doneTimer.current = window.setTimeout(onDone, voice ? spellMs : 0)
   }
 
   const lit = Math.floor(progress * SPELL_LINES.length)
@@ -262,6 +290,7 @@ function Recital({ name, onDone, done }: RecitalProps) {
             setMessage(tapMode ? 'Press and hold the seal until the spell is spoken.' : `Tap the seal ${TAPS_NEEDED} times.`)
           }}
           aria-pressed={tapMode}
+          disabled={progress >= 1}
         >
           {tapMode ? 'Hold instead of tapping' : 'Cannot hold? Tap instead'}
         </button>
