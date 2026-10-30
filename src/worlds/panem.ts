@@ -25,16 +25,36 @@ export const panem: World = {
     { id: 'district-12', name: 'District 12', x: 0.78, y: 0.55 },
     { id: 'district-13', name: 'District 13', x: 0.84, y: 0.31 },
   ],
-  targetId: 'district-13',
+  exits: [
+    {
+      pinId: 'district-13',
+      clues: [
+        'The way out lies far from the Capitol, in the north-east of the map.',
+        'It was said to have been wiped out long ago, but its people have been waiting.',
+        'Look for the three great cooling towers in the top-right corner of the map.',
+      ],
+    },
+    {
+      pinId: 'district-8',
+      clues: [
+        'The way out lies in the middle of the nation, where the factories never rest.',
+        'It weaves the cloth for every Peacekeeper uniform, and it was among the first to rise against the Capitol.',
+        'Look for the district in the middle of the map, south of District 3 and west of District 12.',
+      ],
+    },
+    {
+      pinId: 'district-12',
+      clues: [
+        'The way out lies in the east, in a poor mining region.',
+        'A girl who volunteered for her sister comes from here, and coal dust coats every house.',
+        'Look for the district on the right of the map, south of District 13 and east of District 3.',
+      ],
+    },
+  ],
   worldClues: [
     'A nation built on the ruins of a lost country, where the Capitol feasts and the districts go hungry.',
     'Names are drawn from a glass bowl, and one girl steps forward with a bow and an unwavering aim.',
     'May the odds be ever in your favour. Katniss Everdeen, Peeta Mellark, and a mockingjay.',
-  ],
-  locationClues: [
-    'The way out lies far from the Capitol, in the north-east of the map.',
-    'It was said to have been wiped out long ago, but its people have been waiting.',
-    'Look for the three great cooling towers in the top-right corner of the map.',
   ],
   trivia: [
     {

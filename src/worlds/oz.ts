@@ -30,16 +30,36 @@ export const oz: World = {
     { id: 'glinda', name: "Glinda's Palace", x: 0.52, y: 0.63 },
     { id: 'sandy-desert', name: 'The Great Sandy Desert', x: 0.17, y: 0.8 },
   ],
-  targetId: 'emerald-city',
+  exits: [
+    {
+      pinId: 'poppy-field',
+      clues: [
+        'The way out lies in the north-east of the land, where a sweet smell drifts over the fields.',
+        'Its red flowers put every traveller to sleep, and only a swarm of field mice could save the lion.',
+        'Look for the field north-east of the Emerald City, above Munchkinland and east of Gillikin Village.',
+      ],
+    },
+    {
+      pinId: 'glinda',
+      clues: [
+        'The way out lies in the south of the land, beyond the great green city.',
+        'A good witch rules here, and she knows how a pair of silver shoes can carry you home.',
+        'Look for the palace just south of the Emerald City, above Quadling Country.',
+      ],
+    },
+    {
+      pinId: 'munchkinland',
+      clues: [
+        'The way out lies in the east, where your journey began.',
+        'It is where a farmhouse fell from the sky, and little people sang a welcome.',
+        'Look for the country just east of the Emerald City, between the city and the Yellow Brick Road.',
+      ],
+    },
+  ],
   worldClues: [
     'Visitors here almost always arrive by accident, and spend the whole story trying to get home.',
     'A scarecrow, a tin woodman and a cowardly lion all walk a road paved in gold.',
     'Follow the yellow brick road to see the Wizard. There is no place like home.',
-  ],
-  locationClues: [
-    'The way out lies in the very heart of the land, where all four countries meet.',
-    'Every road leads there, and you will know it by its green shine.',
-    'Look for the green castle in the middle of the map, with a ribbon beneath it.',
   ],
   trivia: [
     {

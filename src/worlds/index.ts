@@ -15,11 +15,11 @@ export function getWorld(id: WorldId): World {
   return world
 }
 
-export function getTarget(world: World) {
-  const pin = world.pins.find((p) => p.id === world.targetId)
-  if (!pin) throw new Error(`World ${world.id} has no target pin`)
+export function getTarget(world: World, exitId: string) {
+  const pin = world.pins.find((p) => p.id === exitId)
+  if (!pin) throw new Error(`World ${world.id} has no pin ${exitId}`)
   return pin
 }
 
-export type { Difficulty, Pin, TriviaQuestion, World, WorldId } from './types'
+export type { Difficulty, Exit, Pin, TriviaQuestion, World, WorldId } from './types'
 export { decoys } from './decoys'

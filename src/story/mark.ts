@@ -27,8 +27,9 @@ export const mark = {
     return `Yes! ${story}. Now we know which book holds you.`
   },
 
-  findStart:
-    'The way out lies somewhere in this story. Tap places on the map and I will tell you whether you are warm or cold, and which way to go.',
+  findStart(target: string): string {
+    return `The way out lies at ${target}. Tap places on the map and I will tell you how far you are, and in which direction.`
+  },
 
   findResult(band: ProximityBand, target: string): string {
     switch (band) {

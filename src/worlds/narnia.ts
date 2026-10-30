@@ -29,16 +29,36 @@ export const narnia: World = {
     { id: 'glasswater', name: 'Glasswater', x: 0.85, y: 0.68 },
     { id: 'archenland', name: 'Archenland', x: 0.34, y: 0.9 },
   ],
-  targetId: 'lantern-waste',
+  exits: [
+    {
+      pinId: 'lantern-waste',
+      clues: [
+        'The way out lies in the far north-west, at the very edge of the land.',
+        'Look for a thick forest where a single lamp burns in the snow.',
+        'Find the dark forest in the top-left corner of the map, just west of a small village.',
+      ],
+    },
+    {
+      pinId: 'cair-paravel',
+      clues: [
+        'The way out lies in the far east, where the land ends in the sea.',
+        'Four thrones sit in its great hall, and kings and queens once ruled from it.',
+        'Look for the castle on the east coast, on the right edge of the map and above Glasswater.',
+      ],
+    },
+    {
+      pinId: 'aslans-how',
+      clues: [
+        'The way out lies in the heart of the land, beneath a hill.',
+        'A great stone table stands in a chamber under the mound, where a lion once gave his life.',
+        'Look for the hill just below the middle of the map, south of the Great River and west of Beruna.',
+      ],
+    },
+  ],
   worldClues: [
     'A door in an ordinary house opens onto a land where it has been winter for a hundred years, and never once Christmas.',
     'A faun with an umbrella, a pair of talking beavers, and four children who become kings and queens.',
     'Aslan the great lion, a White Witch and a wardrobe full of fur coats.',
-  ],
-  locationClues: [
-    'The way out lies in the far north-west, at the very edge of the land.',
-    'Look for a thick forest where a single lamp burns in the snow.',
-    'Find the dark forest in the top-left corner of the map, just west of a small village.',
   ],
   trivia: [
     {

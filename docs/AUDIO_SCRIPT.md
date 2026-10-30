@@ -133,8 +133,8 @@ Every line the game speaks, in play order. Each has a stable ID you can use as t
 
 ## 3. Where does the way out lie? (Mark)
 
-**WHERE-01** · Mark · _stage start_
-> The way out lies somewhere in this story. Tap places on the map and I will tell you whether you are warm or cold, and which way to go.
+**WHERE-01** · Mark · _stage start · text only, not voiced (names the place)_
+> The way out lies at {place}. Tap places on the map and I will tell you how far you are, and in which direction.
 
 **WHERE-02** · Mark · _result: veryClose_
 > So close the ink is still wet.

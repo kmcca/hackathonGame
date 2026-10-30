@@ -55,6 +55,8 @@ export interface GameState {
   /** True when the player has escaped one book and been drawn into another. */
   replay: boolean
   worldId: WorldId
+  /** Id of the pin where the way out lies in this game. One of the world's exits. */
+  exitId: string
   identify: IdentifyState
   find: FindState
   trivia: TriviaState
@@ -73,7 +75,7 @@ export type Action =
   | { type: 'ANSWER'; option: number }
   | { type: 'CONTINUE' }
   | { type: 'FINISH_BINDING' }
-  | { type: 'REPLAY'; worldId: WorldId; order: number[] }
+  | { type: 'REPLAY'; worldId: WorldId; order: number[]; exitId: string }
 
 /** Whether typed text names the given world. Decoys and other worlds never count. */
 export function isWorldGuess(text: string, worldId: WorldId): boolean {
@@ -97,6 +99,11 @@ export function pickQuestionOrder(world: World, rng: () => number): number[] {
   })
 }
 
+/** Picks which of the world's exits is the way out for this game. */
+export function pickExitId(world: World, rng: () => number): string {
+  return world.exits[Math.floor(rng() * world.exits.length)].pinId
+}
+
 /** Picks a world, avoiding the one just played when there is a choice. */
 export function pickWorldId(rng: () => number, avoid?: WorldId): WorldId {
   const pool = worlds.filter((w) => w.id !== avoid)
@@ -104,13 +111,14 @@ export function pickWorldId(rng: () => number, avoid?: WorldId): WorldId {
   return choices[Math.floor(rng() * choices.length)].id
 }
 
-export function createGame(worldId: WorldId, order: number[], playerName = ''): GameState {
+export function createGame(worldId: WorldId, order: number[], exitId: string, playerName = ''): GameState {
   return {
     phase: 'intro',
     playerName,
     introStep: 0,
     replay: false,
     worldId,
+    exitId,
     identify: {
       wrongGuesses: [],
       cluesUsed: 0,
@@ -210,7 +218,7 @@ export function reducer(state: GameState, action: Action): GameState {
         find: {
           ...find,
           guessedPinIds: [...find.guessedPinIds, action.pinId],
-          solved: action.pinId === world.targetId,
+          solved: action.pinId === state.exitId,
         },
       }
     }
@@ -251,7 +259,11 @@ export function reducer(state: GameState, action: Action): GameState {
 
     case 'REPLAY': {
       if (state.phase !== 'ending') return state
-      return { ...createGame(action.worldId, action.order, state.playerName), phase: 'identifyWorld', replay: true }
+      return {
+        ...createGame(action.worldId, action.order, action.exitId, state.playerName),
+        phase: 'identifyWorld',
+        replay: true,
+      }
     }
   }
 }
@@ -264,7 +276,7 @@ export interface Scores {
 }
 
 export function wrongPins(state: GameState): number {
-  return state.find.guessedPinIds.filter((id) => id !== getWorld(state.worldId).targetId).length
+  return state.find.guessedPinIds.filter((id) => id !== state.exitId).length
 }
 
 export function wrongAnswers(state: GameState): number {
@@ -293,7 +305,7 @@ export function fragmentsEarned(state: GameState): number {
 }
 
 export function targetName(state: GameState): string {
-  return getTarget(getWorld(state.worldId)).name
+  return getTarget(getWorld(state.worldId), state.exitId).name
 }
 
 export { MAX_SCORE }

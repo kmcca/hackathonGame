@@ -19,7 +19,7 @@ interface Props {
 
 export function FindScreen({ state, dispatch }: Props) {
   const world = getWorld(state.worldId)
-  const target = getTarget(world)
+  const target = getTarget(world, state.exitId)
   const aspect = world.maps.width / world.maps.height
   const { find } = state
 
@@ -48,10 +48,10 @@ export function FindScreen({ state, dispatch }: Props) {
       ? null
       : last
         ? [bandVoice[last.proximity.band], ...(pulse ? ['WHERE-06'] : [])]
-        : ['WHERE-01']
+        : null // The opening line names the place, which the recording cannot.
   useVoice(voiceIds, `${last?.pin.id ?? 'start'}-${pulse}`)
 
-  const line = [last ? mark.findResult(last.proximity.band, target.name) : mark.findStart, pulse ? mark.findPulse : '']
+  const line = [last ? mark.findResult(last.proximity.band, target.name) : mark.findStart(target.name), pulse ? mark.findPulse : '']
     .filter(Boolean)
     .join(' ')
 

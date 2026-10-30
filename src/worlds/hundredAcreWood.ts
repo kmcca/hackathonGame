@@ -38,16 +38,36 @@ export const hundredAcreWood: World = {
     { id: 'aker-wood', name: '100 Aker Wood', x: 0.48, y: 0.66 },
     { id: 'eeyores-gloomy-place', name: "Eeyore's Gloomy Place", x: 0.86, y: 0.75 },
   ],
-  targetId: 'christopher-robins-house',
+  exits: [
+    {
+      pinId: 'christopher-robins-house',
+      clues: [
+        'The way out lies at the far eastern edge of the wood, where the trees give way to open country.',
+        'Look for the biggest tree on the map, where a boy lives.',
+        'Find the great oak on the right-hand side of the map, with a stream running past it toward the top-right corner.',
+      ],
+    },
+    {
+      pinId: 'poohs-house',
+      clues: [
+        'The way out lies at the far western edge of the wood.',
+        'A bear who loves honey lives here, under the name of Mr. Sanders.',
+        "Look for the house on the far left of the map, in the middle, above Piglet's House.",
+      ],
+    },
+    {
+      pinId: 'owls-house',
+      clues: [
+        'The way out lies in the middle of the wood, a little east of the centre.',
+        'The wisest in the wood lives here, behind a door with a bell-pull and a notice that few can spell.',
+        "Look for the house right of the middle of the map, below Rabbit's Friends and Relations.",
+      ],
+    },
+  ],
   worldClues: [
     'A bear of very little brain lives in a wood named for the acres it covers.',
     'A pot of honey, a gloomy donkey, a bouncy tiger and a boy named Christopher Robin.',
     'Oh, bother! Pooh, Piglet, Eeyore, Tigger and Owl all live in this wood.',
-  ],
-  locationClues: [
-    'The way out lies at the far eastern edge of the wood, where the trees give way to open country.',
-    'Look for the biggest tree on the map, where a boy lives.',
-    'Find the great oak on the right-hand side of the map, with a stream running past it toward the top-right corner.',
   ],
   trivia: [
     {

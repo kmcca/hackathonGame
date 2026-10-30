@@ -33,16 +33,36 @@ export const westeros: World = {
     { id: 'vaes-dothrak', name: 'Vaes Dothrak', x: 0.82, y: 0.61 },
     { id: 'meereen', name: 'Meereen', x: 0.77, y: 0.79 },
   ],
-  targetId: 'winterfell',
+  exits: [
+    {
+      pinId: 'winterfell',
+      clues: [
+        'The way out lies in the cold north, far above the Neck.',
+        'It is the seat of a great house, set among dark pines in the upper north.',
+        'Look just below the Wall for a castle in the woods, with a shield above it.',
+      ],
+    },
+    {
+      pinId: 'kings-landing',
+      clues: [
+        'The way out lies in the heart of the realm, where the river meets the eastern sea.',
+        'It is the capital, where an iron throne of swords sits above a crowded city.',
+        "Look for the city on the east coast, just south of the middle of the map and north of Storm's End.",
+      ],
+    },
+    {
+      pinId: 'sunspear',
+      clues: [
+        'The way out lies at the very bottom of the realm, in the hot lands of the far south.',
+        'It is the seat of the princes of Dorne, a palace of sand-coloured stone beside the sea.',
+        "Look for the castle on the south-east coast, below Storm's End.",
+      ],
+    },
+  ],
   worldClues: [
     'The seasons here last for years, and no almanac has ever predicted the next one correctly.',
     'Seven kingdoms, one iron seat, and a wall of ice that keeps old horrors at bay. Mind the direwolves.',
     'There is a Mother of Dragons, a Hand of the King, and a very long winter that is always coming.',
-  ],
-  locationClues: [
-    'The way out lies in the cold north, far above the Neck.',
-    'It is the seat of a great house, set among dark pines in the upper north.',
-    'Look just below the Wall for a castle in the woods, with a shield above it.',
   ],
   trivia: [
     {
