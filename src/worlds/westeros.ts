@@ -109,5 +109,21 @@ export const westeros: World = {
       answer: 3,
       hint: 'Their words are "Our Blades Are Sharp".',
     },
+    {
+      id: 'lannister-words',
+      difficulty: 'moderate',
+      prompt: 'What are the official words of House Lannister?',
+      options: ['Hear Me Roar!', 'Winter Is Coming', 'Fire and Blood', 'Unbowed, Unbent, Unbroken'],
+      answer: 0,
+      hint: 'Their sigil is a golden lion, and it is not the one about paying debts.',
+    },
+    {
+      id: 'heartsbane',
+      difficulty: 'hard',
+      prompt: 'What is the name of the Valyrian steel greatsword of House Tarly?',
+      options: ['Heartsbane', 'Oathkeeper', 'Longclaw', "Widow's Wail"],
+      answer: 0,
+      hint: 'It is kept at Horn Hill, and its name speaks of the heart.',
+    },
   ],
 }

@@ -110,5 +110,21 @@ export const middleEarth: World = {
       answer: 1,
       hint: 'He was the master of Sauron, and his crown held the Silmarils.',
     },
+    {
+      id: 'shadowfax',
+      difficulty: 'moderate',
+      prompt: "What is the name of Gandalf's horse?",
+      options: ['Shadowfax', 'Brego', 'Hasufel', 'Bill'],
+      answer: 0,
+      hint: 'He is the lord of all horses, and no one else can ride him.',
+    },
+    {
+      id: 'celebrimbor',
+      difficulty: 'hard',
+      prompt: 'Which Elven smith forged the Rings of Power?',
+      options: ['Fëanor', 'Finrod', 'Celebrimbor', 'Gil-galad'],
+      answer: 2,
+      hint: 'He lived in Eregion, and Sauron deceived him.',
+    },
   ],
 }

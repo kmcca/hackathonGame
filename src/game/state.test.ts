@@ -61,7 +61,7 @@ describe('identify the world', () => {
   it('records wrong guesses, including other known stories', () => {
     const state = run(
       started('westeros'),
-      { type: 'GUESS_WORLD', text: 'Narnia' },
+      { type: 'GUESS_WORLD', text: 'Earthsea' },
       { type: 'GUESS_WORLD', text: wrongWorld('westeros').name },
     )
     expect(state.identify.wrongGuesses).toHaveLength(2)
@@ -85,7 +85,7 @@ describe('identify the world', () => {
   it('offers the multiple-choice fallback only after enough misses', () => {
     let state = run(started('oz'), { type: 'FALLBACK_GUESS', worldId: 'oz' })
     expect(state.identify.solved).toBe(false)
-    for (let i = 0; i < FALLBACK_AFTER; i++) state = reducer(state, { type: 'GUESS_WORLD', text: 'Narnia' })
+    for (let i = 0; i < FALLBACK_AFTER; i++) state = reducer(state, { type: 'GUESS_WORLD', text: 'Earthsea' })
     state = reducer(state, { type: 'FALLBACK_GUESS', worldId: 'oz' })
     expect(state.identify.solved).toBe(true)
     expect(state.identify.usedFallback).toBe(true)
@@ -152,7 +152,7 @@ describe('dead ends', () => {
     let state = started(id)
 
     // Every wrong guess, every clue, the labelled map, then the fallback.
-    for (let i = 0; i < 6; i++) state = reducer(state, { type: 'GUESS_WORLD', text: 'Narnia' })
+    for (let i = 0; i < 6; i++) state = reducer(state, { type: 'GUESS_WORLD', text: 'Earthsea' })
     for (let i = 0; i < 3; i++) state = reducer(state, { type: 'WORLD_CLUE' })
     state = reducer(state, { type: 'SHOW_LABELLED' })
     for (const other of worlds.filter((w) => w.id !== id)) {

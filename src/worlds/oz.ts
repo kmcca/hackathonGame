@@ -106,5 +106,21 @@ export const oz: World = {
       answer: 1,
       hint: 'His name described his trade.',
     },
+    {
+      id: 'spectacles',
+      difficulty: 'moderate',
+      prompt: 'What must visitors wear in the Emerald City to protect their eyes?',
+      options: ['Green spectacles', 'Silver masks', 'Golden hats', 'Thick veils'],
+      answer: 0,
+      hint: 'The city is not really green, and these are the reason it looks that way.',
+    },
+    {
+      id: 'scarecrow-rules',
+      difficulty: 'hard',
+      prompt: 'Who does the Wizard leave in charge of the Emerald City when he departs?',
+      options: ['The Tin Woodman', 'The Scarecrow', 'Glinda', 'The Cowardly Lion'],
+      answer: 1,
+      hint: 'He got his brains, and he made a good ruler.',
+    },
   ],
 }

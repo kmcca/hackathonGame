@@ -1,4 +1,4 @@
-export type WorldId = 'westeros' | 'middleEarth' | 'oz'
+export type WorldId = 'westeros' | 'middleEarth' | 'oz' | 'narnia' | 'treasureIsland' | 'hundredAcreWood' | 'panem'
 
 /** A tappable place. x and y are fractions (0-1) of the map image width and height. */
 export interface Pin {

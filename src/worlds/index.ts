@@ -1,9 +1,13 @@
+import { hundredAcreWood } from './hundredAcreWood'
 import { middleEarth } from './middleEarth'
+import { narnia } from './narnia'
 import { oz } from './oz'
+import { panem } from './panem'
+import { treasureIsland } from './treasureIsland'
 import { westeros } from './westeros'
 import type { World, WorldId } from './types'
 
-export const worlds: World[] = [westeros, middleEarth, oz]
+export const worlds: World[] = [westeros, middleEarth, oz, narnia, treasureIsland, hundredAcreWood, panem]
 
 export function getWorld(id: WorldId): World {
   const world = worlds.find((w) => w.id === id)
