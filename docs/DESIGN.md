@@ -57,3 +57,12 @@ Content is left-aligned. The Binding and ending centre their content because the
 - Proximity uses a word and a shape, plus the compass arrow and its spoken form.
 - Motion is under 300ms except the two moments above. It is turned off by the OS setting or the in-game toggle.
 - z-index scale: dropdown 100, modal 200, tooltip 300, notification 400. Nothing is above 500.
+
+## The Roll of Escapees
+
+A second vellum page beside the result card (below it on narrow screens), and a modal dialog from the title screen. It reuses the existing tokens and adds none.
+
+- Rank numerals and scores are in Grenze Gotisch with tabular figures; names are Alegreya bold, with the rank title and world on a second line. Numbered places are right here because the list really is a sequence.
+- The player's own line is marked by a bar, a "You" tag and a shaded ground, never colour alone. It lights up in Gilt and settles to Parchment Shade in 280ms. Reduced motion removes the animation.
+- Every state says what to do: empty ("Finish a tale to be the first"), offline (score saved, Try again), refused name, and a run that missed the list (it states what tenth place holds).
+- The dialog is a native `<dialog>`: focus is trapped, Escape and the backdrop close it, and focus returns to the button that opened it. Only the page scrolls, so Back stays in view.

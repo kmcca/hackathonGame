@@ -2,7 +2,7 @@
 
 A free, browser-based map-and-trivia game for Hackathon 28 ("Page Break"). A glowing green beer spills, the books burst open, and you are swallowed by one. Wizard Mark guides you from the edge of the page: name the story you landed in, find the place where the way out lies, answer questions to forge the key, set the runes on the lock, then speak the spell. A play-through takes four to six minutes.
 
-There is no backend and no account. Your name stays in the browser tab.
+There are no accounts. The game itself runs entirely in the browser; only the Roll of Escapees (the shared top-ten board) needs a small backend. A player's name is used to write them into the story, and appears publicly only if their score reaches the top ten.
 
 ## Run it
 
@@ -10,13 +10,24 @@ There is no backend and no account. Your name stays in the browser tab.
 npm install
 npm run dev        # http://localhost:5173
 npm run test       # unit tests for scoring, geo, matching and the game state machine
-npm run build      # static site in dist/
+npm run build      # static site in dist/ (plus the api/ function when deployed)
 npm run preview    # serve dist/ locally
 ```
 
 ## Deploy
 
 `dist/` is a plain static site. On Netlify or Vercel, set the build command to `npm run build` and the output directory to `dist`. `public/_redirects` (Netlify) and `vercel.json` (Vercel) route every path to `index.html`, which the hidden `/pin-tool` page relies on. If you cannot add a redirect, `#pin-tool` also opens it.
+
+### The Roll of Escapees (shared top ten)
+
+`api/scores.ts` is a Vercel function that keeps the board in Upstash Redis. `GET /api/scores` returns the board; `POST` adds a finished run. One entry is kept per name (case and spacing ignored), the best score wins, and earlier beats later on a tie.
+
+1. In the Vercel project, add the Upstash Redis integration from the Marketplace. It sets `KV_REST_API_URL` and `KV_REST_API_TOKEN` (a standalone Upstash database uses `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` instead; both are read).
+2. Redeploy. With no database connected the board shows "The Roll could not be reached", and finished scores are kept in the browser and sent later.
+
+`npm run dev` and `npm run preview` serve the same handler from memory, so the board works locally with no setup (it resets when the server restarts). To test against Redis, run `vercel dev` after `vercel env pull`.
+
+The server checks the score range, trims names, blocks a short list of words (`src/game/leaderboard.ts`) and limits each address to 20 submissions a minute. Scores are worked out in the browser, so a determined player can still post a fake one; this is a friendly-office board, not a tournament.
 
 ## Where things live
 
@@ -25,7 +36,8 @@ npm run preview    # serve dist/ locally
 | `src/worlds/*.ts` | One module per world: map images, pins, clues and trivia. `decoys.ts` lists stories that only appear in autocomplete. |
 | `src/story/` | Intro beats and Mark's lines. Edit these to change the voice. |
 | `src/audio/` | Voice playback. `voice.ts` maps each line id (see `docs/AUDIO_SCRIPT.md`) to a start and end time in a recording in `voice_audio/`. A short line can be its own file, with `start: 0` and `end` set to its length. |
-| `src/game/` | Pure logic with tests: `scoring`, `geo`, `match`, `state` (the reducer), `lock` (the rune puzzle), `share`. |
+| `src/game/` | Pure logic with tests: `scoring`, `geo`, `match`, `state` (the reducer), `lock` (the rune puzzle), `share`, `leaderboard` (Roll rules shared with the server) and `rollClient` (fetching, plus scores saved while offline). |
+| `api/` | The Roll's serverless function. `_roll.ts` holds the logic, `_memoryStore.ts` the in-memory store used by tests and dev, `scores.ts` the Redis adapter. |
 | `src/ui/` | Components and the six screens. |
 | `src/styles/` | Tokens, base, layout, components, and the two memorable moments. |
 | `map_images/` | The supplied maps. Worlds import these directly. |
