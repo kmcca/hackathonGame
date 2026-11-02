@@ -283,8 +283,27 @@
   max-width: 56rem;
 }
 
+/* The result and the Roll sit side by side once there is room. */
+.ending-pages {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .screen--ending {
+    max-width: 72rem;
+  }
+
+  .ending-pages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .ending-art {
   width: 100%;
+  max-width: 56rem;
   border-radius: var(--radius);
   border: 0.1875rem solid var(--gilt);
   display: block;

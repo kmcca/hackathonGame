@@ -1,5 +1,7 @@
-import titleArt from '../../../reference_images/pack-break-theme.png'
+import { useState } from 'react'
+import titleArt from '../../../reference_images/pack-break-theme.jpg'
 import { ScreenHeading } from '../Layout'
+import { RollDialog } from '../Roll'
 
 interface TitleScreenProps {
   name: string
@@ -8,6 +10,7 @@ interface TitleScreenProps {
 }
 
 export function TitleScreen({ name, onNameChange, onStart }: TitleScreenProps) {
+  const [rollOpen, setRollOpen] = useState(false)
   return (
     <main className="screen screen--title">
       <img
@@ -44,8 +47,17 @@ export function TitleScreen({ name, onNameChange, onStart }: TitleScreenProps) {
             Open the book
           </button>
         </div>
-        <p className="form-note">Your name stays in this browser. It is only used to write you into the story.</p>
+        <p className="form-note">
+          Your name writes you into the story. If your score reaches the top ten, it is also shown on the Roll of
+          Escapees, which every player can see.
+        </p>
       </form>
+      <div className="title-roll">
+        <button type="button" className="button button--ghost" onClick={() => setRollOpen(true)}>
+          See the Roll of Escapees
+        </button>
+      </div>
+      <RollDialog open={rollOpen} onClose={() => setRollOpen(false)} />
     </main>
   )
 }

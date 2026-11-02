@@ -4,6 +4,7 @@ import type { GameState, Scores } from '../../game/state'
 import { mark } from '../../story/mark'
 import { MarkStrip, ScreenHeading } from '../Layout'
 import { ResultCard } from '../ResultCard'
+import { Roll } from '../Roll'
 
 interface Props {
   state: GameState
@@ -24,7 +25,10 @@ export function EndingScreen({ state, scores, onReplay }: Props) {
       />
       <ScreenHeading>Back in the Veracafe</ScreenHeading>
       <MarkStrip>{mark.ending(state.playerName)}</MarkStrip>
-      <ResultCard state={state} scores={scores} onReplay={onReplay} />
+      <div className="ending-pages">
+        <ResultCard state={state} scores={scores} onReplay={onReplay} />
+        <Roll submission={{ name: state.playerName, score: scores.total, worldId: state.worldId }} />
+      </div>
     </main>
   )
 }

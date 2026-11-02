@@ -1184,3 +1184,132 @@ section[aria-labelledby='tried-title'] {
 .fragment span {
   text-transform: capitalize;
 }
+
+/* ---------- Roll of Escapees ---------- */
+.roll__title {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+}
+
+.roll__status {
+  max-width: var(--measure);
+  font-style: italic;
+}
+
+.roll__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.roll__table thead th {
+  padding: var(--space-1) var(--space-2) var(--space-2);
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 700;
+  border-bottom: 0.125rem solid var(--ink);
+}
+
+.roll__table thead th:last-child,
+.roll__score {
+  text-align: right;
+}
+
+.roll__row > * {
+  padding: var(--space-3) var(--space-2);
+  border-bottom: 0.0625rem dashed #b7a577;
+  vertical-align: top;
+}
+
+.roll__place {
+  width: 3rem;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.roll__name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* Marked with a word and a bar, so it never depends on colour. */
+.roll__you {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 0 var(--space-2);
+  border: 0.125rem solid var(--ink);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.roll__meta {
+  display: block;
+  color: #5a4a35;
+  font-size: 1rem;
+}
+
+.roll__score {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.roll__row--mine > * {
+  background: var(--shade);
+  animation: roll-inscribe 0.28s ease-out;
+}
+
+.roll__row--mine > :first-child {
+  box-shadow: inset 0.3125rem 0 0 var(--ink);
+}
+
+/* The new line lights up in gilt and settles into the page. */
+@keyframes roll-inscribe {
+  from {
+    background: var(--gilt);
+  }
+}
+
+/* The board as a dialog over the title screen. */
+.roll-dialog {
+  width: min(40rem, calc(100vw - 2 * var(--safe-x)));
+  max-width: none;
+  max-height: calc(100dvh - 2 * var(--safe-y));
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--lamp);
+  overflow: hidden;
+}
+
+/* Only the page scrolls, so Back stays in view on a short screen. */
+.roll-dialog[open] {
+  display: flex;
+}
+
+.roll-dialog::backdrop {
+  background: rgb(11 23 19 / 0.85);
+}
+
+.roll-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+  min-height: 0;
+}
+
+.roll-dialog__body .roll {
+  min-height: 0;
+  overflow: auto;
+}
+
+.title-roll {
+  display: flex;
+}
