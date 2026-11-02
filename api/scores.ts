@@ -28,8 +28,9 @@ function redisStore(redis: Redis): RollStore {
     },
     async details(members) {
       if (!members.length) return []
-      const found = await redis.hmget<Record<string, string>>(DETAILS_KEY, ...members)
-      return members.map((member) => found?.[member] ?? null)
+      // With deserialization off, HMGET hands back the raw array in the order asked, not an object keyed by field.
+      const found = (await redis.hmget(DETAILS_KEY, ...members)) as unknown as (string | null)[] | null
+      return members.map((_, index) => found?.[index] ?? null)
     },
     async hit(address) {
       const key = `pagebreak:roll:hits:${address}`
