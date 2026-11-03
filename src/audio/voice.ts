@@ -12,7 +12,12 @@ export interface Clip {
   file: string
   start: number
   end: number
+  /** Loudness multiplier for this clip, 1 when omitted. Above 1 boosts it past the element's own volume cap. */
+  gain?: number
 }
+
+/** Mark's intro lines are recorded quieter than the narrator, so they get a boost. His in-game lines stay as recorded. */
+const INTRO_MARK_GAIN = 2
 
 export const CLIPS: Record<string, Clip> = {
   'INTRO-01': { file: narrationFile, start: 0, end: 12.5 },
@@ -24,11 +29,11 @@ export const CLIPS: Record<string, Clip> = {
   'INTRO-07': { file: narrationFile, start: 65.4, end: 73.5 },
 
   // Mark's recording has no story-specific lines, so it works for any story.
-  'INTRO-08': { file: markFile, start: 0, end: 8.2 },
-  'INTRO-09': { file: markFile, start: 9.95, end: 16.45 },
-  'INTRO-10': { file: markFile, start: 17.65, end: 25.7 },
-  'INTRO-11': { file: markFile, start: 26.8, end: 34.95 },
-  'INTRO-12': { file: markFile, start: 35.8, end: 42.95 },
+  'INTRO-08': { file: markFile, start: 0, end: 8.2, gain: INTRO_MARK_GAIN },
+  'INTRO-09': { file: markFile, start: 9.95, end: 16.45, gain: INTRO_MARK_GAIN },
+  'INTRO-10': { file: markFile, start: 17.65, end: 25.7, gain: INTRO_MARK_GAIN },
+  'INTRO-11': { file: markFile, start: 26.8, end: 34.95, gain: INTRO_MARK_GAIN },
+  'INTRO-12': { file: markFile, start: 35.8, end: 42.95, gain: INTRO_MARK_GAIN },
   'STORY-01': { file: markFile, start: 43.75, end: 49.05 },
   'WHERE-01': { file: markFile, start: 49.9, end: 57.65 },
   'WHERE-02': { file: markFile, start: 58.45, end: 60.7 },
@@ -67,6 +72,32 @@ let token = 0
 /** Quiet time between lines when several are queued. */
 const QUEUE_GAP_MS = 350
 
+let context: AudioContext | null = null
+let limiter: DynamicsCompressorNode | null = null
+const gains = new Map<HTMLAudioElement, GainNode>()
+
+/** Every element feeds a gain node, then a shared limiter so boosted speech peaks don't distort. */
+function gainFor(el: HTMLAudioElement): GainNode | null {
+  const existing = gains.get(el)
+  if (existing) return existing
+  if (typeof AudioContext === 'undefined') return null
+  if (!context || !limiter) {
+    context = new AudioContext()
+    limiter = context.createDynamicsCompressor()
+    limiter.threshold.value = -3
+    limiter.knee.value = 0
+    limiter.ratio.value = 20
+    limiter.attack.value = 0.003
+    limiter.release.value = 0.1
+    limiter.connect(context.destination)
+  }
+  const gain = context.createGain()
+  context.createMediaElementSource(el).connect(gain)
+  gain.connect(limiter)
+  gains.set(el, gain)
+  return gain
+}
+
 function elementFor(file: string): HTMLAudioElement {
   let el = elements.get(file)
   if (!el) {
@@ -101,6 +132,9 @@ export function playVoice(ids: string | string[]) {
     const start = () => {
       if (mine !== token) return
       el.currentTime = clip.start
+      const gain = gainFor(el)
+      if (gain) gain.gain.value = clip.gain ?? 1
+      void context?.resume()
       current = el
       el.play().catch(() => {
         // The browser blocked playback until the player interacts. The text still reads on its own.
