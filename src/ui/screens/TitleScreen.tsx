@@ -20,7 +20,7 @@ export function TitleScreen({ name, onNameChange, onStart }: TitleScreenProps) {
         width="750"
         height="508"
       />
-      <ScreenHeading hint="Name the story you have landed in, find the place where the way out lies, and forge the key.">
+      <ScreenHeading hint="Name the tale that swallowed you, find where the way out lies, and forge the key to set yourself free.">
         Page Break: Breakout
       </ScreenHeading>
       <form
